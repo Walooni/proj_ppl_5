@@ -19,7 +19,24 @@ Route::get('/dashboard-mhs', function () {
     return view('dashboard-mhs');
 });
 
-// Pembimbing Akademik
+// Pembimbing Akademik -- Doswal
+Route::get('/dashboard-doswal', function () {
+    return view('doswal/dashboard-doswal');
+});
+
+Route::get('/persetujuanIRS-doswal', function () {
+    return view('doswal/persetujuanIRS-doswal');
+});
+
+Route::get('/rekap-doswal', function () {
+    return view('doswal/rekap-doswal');
+});
+
+Route::get('/nilai-doswal', function () {
+    return view('doswal/nilai-doswal');
+});
+
+
 
 // Bagian Akademik
 Route::get('/dashboard-ba', function () {
