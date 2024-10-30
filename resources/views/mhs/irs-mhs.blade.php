@@ -216,10 +216,10 @@
       <button class="logout">Logout</button>
     </div>
     <ul>
-      <li><a href="#">Dashboard</a></li>
+      <li><a href="dashboard-mhs">Dashboard</a></li>
       {{-- <li><a href="#">Her Registrasi</a></li> --}}
       <li><a href="pengisianirs-mhs">Pengisian IRS</a></li>
-      <li><a href="#" class="active">IRS</a></li>
+      <li><a href="irs-mhs" class="active">IRS</a></li>
       {{-- <li><a href="#">KHS</a></li>
       <li><a href="#">Transkrip</a></li>
       <li><a href="#">Konsultasi</a></li> --}}

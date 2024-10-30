@@ -17,13 +17,13 @@ Route::get('/about', function () {
 
 // Mahasiswa
 Route::get('/dashboard-mhs', function () {
-    return view('dashboard-mhs');
+    return view('mhs/dashboard-mhs');
 });
 Route::get('/pengisianirs-mhs', function () {
-    return view('pengisianirs-mhs');
+    return view('mhs/pengisianirs-mhs');
 });
 Route::get('/irs-mhs', function () {
-    return view('irs-mhs');
+    return view('mhs/irs-mhs');
 });
 
 // Pembimbing Akademik -- Doswal
@@ -47,34 +47,36 @@ Route::get('/nilai-doswal', function () {
 
 // Bagian Akademik
 Route::get('/dashboard-ba', function () {
-    return view('dashboard-ba');
+    return view('ba/dashboard-ba');
 });
 
 Route::get('/buatusulan', function () {
-    return view('buatusulan');
+    return view('ba/buatusulan');
 });
 
 Route::get('/daftarusulan', function () {
-    return view('daftarusulan');
+    return view('ba/daftarusulan');
 });
 
-Route::get('/aturgelombang', function () {
-    return view('aturgelombang');
-});
+
 
 
 
 // Dekan
 Route::get('/dashboard-dekan', function () {
-    return view('dashboard-dekan');
+    return view('dekan/dashboard-dekan');
+});
+
+Route::get('/aturgelombang', function () {
+    return view('dekan/aturgelombang');
 });
 
 Route::get('/usulanruang', function () {
-    return view('usulanruang');
+    return view('dekan/usulanruang');
 });
 
 Route::get('/usulanjadwal', function () {
-    return view('usulanjadwal');
+    return view('dekan/usulanjadwal');
 });
 
 // Kaprodi
@@ -92,28 +94,4 @@ Route::get('/test2', function () {
 });
 
 
-Route::get('/dashboard-ba', function () {
-    return view('dashboard-ba');
-});
 
-Route::get('/dashboard-dekan', function () {
-    return view('dashboard-dekan');
-});
-
-
-Route::get('/buatusulan', function () {
-    return view('buatusulan');
-});
-
-Route::get('/daftarusulan', function () {
-    return view('daftarusulan');
-});
-Route::get('/usulanruang', function () {
-    return view('usulanruang');
-});
-Route::get('/usulanjadwal', function () {
-    return view('usulanjadwal');
-});
-Route::get('/aturgelombang', function () {
-    return view('aturgelombang');
-});

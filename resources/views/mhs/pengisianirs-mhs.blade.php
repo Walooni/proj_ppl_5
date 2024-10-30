@@ -262,7 +262,7 @@
             <button class="logout">Logout</button>
         </div>
         <ul>
-            <li><a href="#">Dashboard</a></li>
+            <li><a href="dashboard-mhs">Dashboard</a></li>
             <li><a href="pengisianirs-mhs" class="active">Pengisian IRS</a></li>
             <li><a href="irs-mhs">IRS</a></li>
         </ul>

@@ -72,10 +72,10 @@
             <a class="nav-link" href="#">Her Registrasi</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Pengisian IRS</a>
+            <a class="nav-link" href="pengisianirs-mhs">Pengisian IRS</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">IRS</a>
+            <a class="nav-link" href="irs-mhs">IRS</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">KHS</a>
