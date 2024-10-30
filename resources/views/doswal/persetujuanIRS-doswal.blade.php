@@ -23,16 +23,20 @@
                 <button class="text-sm w-full bg-red-700 py-1 rounded-full mb-4 mt-2">Logout</button>
             </div>
             <nav class="space-y-4">
-                <a href="{{ url('/dashboard-doswal') }}" class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700">
+                <a href="{{ url('/dashboard-doswal') }}"
+                    class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700">
                     <span>Dashboard</span>
                 </a>
-                <a href="{{ url('/persetujuanIRS-doswal') }}" class="flex items-center space-x-2 p-2 bg-gray-700 rounded-xl text-white">
+                <a href="{{ url('/persetujuanIRS-doswal') }}"
+                    class="flex items-center space-x-2 p-2 bg-gray-700 rounded-xl text-white">
                     <span>Persetujuan IRS</span>
                 </a>
-                <a href="{{ url('/rekap-doswal') }}" class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700">
+                <a href="{{ url('/rekap-doswal') }}"
+                    class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700">
                     <span>Rekap Mahasiswa</span>
                 </a>
-                <a href="{{ url('/nilai-doswal') }}" class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700">
+                <a href="{{ url('/nilai-doswal') }}"
+                    class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700">
                     <span>Nilai</span>
                 </a>
             </nav>
@@ -62,7 +66,96 @@
                 </div>
             </div>
 
-            
+            <!-- tabel persetujuan -->
+            <div class="overflow-auto">
+                <table class="min-w-full bg-white border border-gray-200">
+                    <!-- Table Header (sticky) -->
+                    <thead class="bg-gray-200 sticky top-0">
+                        <tr>
+                            <th
+                                class="px-6 py-3 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">
+                                Nama</th>
+                            <th
+                                class="px-6 py-3 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">
+                                NIM</th>
+                            <th
+                                class="px-6 py-3 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">
+                                Semester</th>
+                            <th
+                                class="px-6 py-3 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">
+                                Aksi</th>
+                            <th
+                                class="px-6 py-3 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">
+                                Keterangan</th>
+                        </tr>
+                    </thead>
+
+                    <!-- Table Body -->
+                    <tbody>
+                        <!-- Row 1 -->
+                        <tr>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800">Zikry Alfakhri</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600">1234567890
+                            </td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600">
+                                4</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600">
+                                <button type="button"
+                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    Setuju</button>
+                                <button type="button"
+                                    class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                    Tolak</button>
+                            </td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-left text-sm">
+                                <a href="#" class="font-medium text-blue-600 dark:text-blue-700 hover:underline">Lihat
+                                    IRS</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800">Zikry Alfakhri</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600">1234567890
+                            </td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600">
+                                4</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600">
+                                <button type="button"
+                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    Setuju</button>
+                                <button type="button"
+                                    class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                    Tolak</button>
+                            </td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-left text-sm">
+                                <a href="#" class="font-medium text-blue-600 dark:text-blue-700 hover:underline">Lihat
+                                    IRS</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800">Zikry Alfakhri</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600">1234567890
+                            </td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600">
+                                4</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600">
+                                <button type="button"
+                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    Setuju</button>
+                                <button type="button"
+                                    class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                    Tolak</button>
+                            </td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-left text-sm">
+                                <a href="#" class="font-medium text-blue-600 dark:text-blue-700 hover:underline">Lihat
+                                    IRS</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
         </main>
     </div>
 

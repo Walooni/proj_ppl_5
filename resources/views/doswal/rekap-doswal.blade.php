@@ -65,6 +65,48 @@
                 </div>
             </div>
 
+            <div class="overflow-auto">
+                <table class="min-w-full bg-white border border-gray-200">
+                    <!-- Table Header (sticky) -->
+                    <thead class="bg-gray-200 sticky top-0">
+                        <tr>
+                            <th
+                                class="px-6 py-3 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">
+                                Nama</th>
+                            <th
+                                class="px-6 py-3 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">
+                                NIM</th>
+                            <th
+                                class="px-6 py-3 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">
+                                Semester</th>
+                            <th
+                                class="px-6 py-3 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">
+                                Aksi</th>
+                            <th
+                                class="px-6 py-3 border-b border-gray-200 text-right text-sm font-semibold text-gray-700">
+                                Keterangan</th>
+                        </tr>
+                    </thead>
+
+                    <!-- Table Body -->
+                    <tbody>
+                        <!-- Row 1 -->
+                        <tr>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800">Zikry Alfakhri</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600">1234567890
+                            </td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600">
+                                4</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600"> 
+                            </td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-right text-sm">
+                                tes
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
         </main>
     </div>
 
