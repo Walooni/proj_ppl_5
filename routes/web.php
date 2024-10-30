@@ -16,8 +16,8 @@ Route::get('/about', function () {
 
 
 // Mahasiswa
-Route::get('/dashboard-mhs-mhs', function () {
-    return view('dashboard-mhs-mhs');
+Route::get('/dashboard-mhs', function () {
+    return view('dashboard-mhs');
 });
 Route::get('/pengisianirs-mhs', function () {
     return view('pengisianirs-mhs');
