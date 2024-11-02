@@ -13,37 +13,39 @@
 
     <!-- Sidebar -->
     <div class="flex">
-        <aside class="w-1/5 bg-blue-500 h-screen p-4 text-white">
+        <aside class="w-1/5 bg-sky-500 h-screen p-4 text-white">
             <!-- profil -->
             <div class="p-3 pb-1 bg-gray-300 rounded-3xl text-center mb-6">
-                <div class="w-24 h-24 mx-auto bg-gray-400 rounded-full mb-3"></div>
+                <div class="w-24 h-24 mx-auto bg-gray-400 rounded-full mb-3 bg-center bg-contain bg-no-repeat"
+                    style="background-image: url(img/fsm.jpg)">
+
+                </div>
                 <h2 class="text-lg text-black font-bold">Ucok, S.Kom</h2>
-                <p class="text-xs text-gray-800">NIP 123456789</p>
-                <p class="text-sm bg-blue-600 rounded-full px-3 py-1 mt-2">Dosen</p>
-                <button class="text-sm w-full bg-red-700 py-1 rounded-full mb-4 mt-2">Logout</button>
+                <p class="text-xs text-gray-800">NIDN 001</p>
+                <p class="text-sm bg-sky-700 rounded-full px-3 py-1 mt-2 font-semibold">Dosen</p>
+                <button
+                    class="text-sm w-full bg-red-700 py-1 rounded-full mb-4 mt-2 font-semibold hover:bg-opacity-70">Logout</button>
             </div>
             <nav class="space-y-4">
                 <a href="{{ url('/dashboard-doswal') }}"
-                    class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700">
+                    class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700 hover:bg-gray-700 hover:text-white">
                     <span>Dashboard</span>
                 </a>
                 <a href="{{ url('/persetujuanIRS-doswal') }}"
-                    class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700">
+                    class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700 hover:bg-gray-700 hover:text-white">
                     <span>Persetujuan IRS</span>
                 </a>
                 <a href="{{ url('/rekap-doswal') }}"
-                    class="flex items-center space-x-2 p-2 bg-gray-700 rounded-xl text-white">
+                    class="flex items-center space-x-2 p-2 bg-sky-800 rounded-xl text-white hover:bg-opacity-70">
                     <span>Rekap Mahasiswa</span>
                 </a>
-                <a href="{{ url('/nilai-doswal') }}"
-                    class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700">
-                    <span>Nilai</span>
-                </a>
             </nav>
+
+
         </aside>
 
         <!-- Main Content -->
-        <main class="w-3/4 p-8">
+        <main class="w-3/4 p-8 h-screen">
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-5xl font-bold">Rekap Mahasiswa</h1>
                 <div class="relative">
@@ -58,49 +60,100 @@
             </div>
 
             <!-- Year Info -->
-            <div class="mb-6">
+            <div class="mb-3">
                 <div class="p-4 bg-gray-200 rounded-lg text-gray-700">
                     <p class="text-lg">Tahun Ajaran</p>
                     <p class="text-2xl font-semibold">2024/2025 Ganjil</p>
                 </div>
             </div>
 
-            <div class="overflow-auto">
-                <table class="min-w-full bg-white border border-gray-200">
+            <!-- dropdown filter kategori mahasiswa -->
+            <form class="w-1/5 mb-3 ">
+                <label for="kategori-irs-mahasiswa" class="block mb-2 text-sm font-medium text-gray-900">Pilih Kategori</label>
+                <select id="kategori-irs-mahasiswa"
+                    class="border text-sm rounded-lg block w-full p-2.5 bg-slate-600 border-gray-300 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500">
+                    <option value="semua"  selected>Semua</option>
+                    <option value="belum-irs">Belum IRS</option>
+                    <option value="belum-disetujui">Belum Disetujui</option>
+                    <option value="sudah-disetujui">Sudah Disetujui</option>
+                </select>
+            </form>
+
+            <!-- tabel mahasiswa-->
+            <div class="container overflow-y-auto h-3/5">
+                <table class="table-auto min-w-full bg-white border border-gray-200">
                     <!-- Table Header (sticky) -->
-                    <thead class="bg-gray-200 sticky top-0">
+                    <thead class="bg-gray-300 sticky top-0">
                         <tr>
                             <th
-                                class="px-6 py-3 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">
+                                class="px-6 py-3 border-b border-gray-200 text-center text-sm font-semibold text-gray-700">
+                                No</th>
+                            <th
+                                class="px-6 py-3 border-b border-gray-200 text-center text-sm font-semibold text-gray-700">
                                 Nama</th>
                             <th
-                                class="px-6 py-3 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">
+                                class="px-6 py-3 border-b border-gray-200 text-center text-sm font-semibold text-gray-700">
                                 NIM</th>
                             <th
-                                class="px-6 py-3 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">
+                                class="px-6 py-3 border-b border-gray-200 text-center text-sm font-semibold text-gray-700">
                                 Semester</th>
                             <th
-                                class="px-6 py-3 border-b border-gray-200 text-left text-sm font-semibold text-gray-700">
-                                Aksi</th>
+                                class="px-6 py-3 border-b border-gray-200 text-center text-sm font-semibold text-gray-700">
+                                Status</th>
                             <th
-                                class="px-6 py-3 border-b border-gray-200 text-right text-sm font-semibold text-gray-700">
-                                Keterangan</th>
+                                class="px-6 py-3 border-b border-gray-200 text-center text-sm font-semibold text-gray-700">
+                                History IRS</th>
                         </tr>
                     </thead>
 
                     <!-- Table Body -->
                     <tbody>
-                        <!-- Row 1 -->
+                        <!-- Row-->
                         <tr>
-                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800">Zikry Alfakhri</td>
-                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600">1234567890
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800 text-center">1</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800 text-center">Zikry
+                                Alfakhri Akram</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">
+                                24060122110001</td>
                             </td>
-                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600">
-                                4</td>
-                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600"> 
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">5</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">
+                                Belum IRS
                             </td>
-                            <td class="px-6 py-4 border-b border-gray-200 text-right text-sm">
-                                tes
+                            <td class="px-6 py-4 border-b border-gray-200 text-center text-sm">
+                                <a href="#" class="font-medium text-blue-600 dark:text-blue-700 hover:underline">Lihat</a>
+                            </td>
+                        </tr>
+                        <!-- Row-->
+                        <tr>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800 text-center">2</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800 text-center">Zikry
+                                Alfakhri Akram</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">
+                                24060122110001</td>
+                            </td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">5</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">
+                                Belum Disetujui
+                            </td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-center text-sm">
+                                <a href="#" class="font-medium text-blue-600 dark:text-blue-700 hover:underline">Lihat</a>
+                            </td>
+                        </tr>
+                        <!-- Row-->
+                        <tr>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800 text-center">3</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800 text-center">Zikry
+                                Alfakhri Akram</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">
+                                24060122110001</td>
+                            </td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">5</td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">
+                                Sudah Disetujui
+                            </td>
+                            <td class="px-6 py-4 border-b border-gray-200 text-center text-sm">
+                                <a href="#" class="font-medium text-blue-600 dark:text-blue-700 hover:underline">Lihat</a>
                             </td>
                         </tr>
 
@@ -111,15 +164,22 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-blue-700 text-white text-center p-4">
-        <p>&copy;2024 SISKARA</p>
-        <div class="flex justify-center space-x-4 mt-2">
-            <a href="#" class="text-white">Facebook</a>
-            <a href="#" class="text-white">Instagram</a>
-            <a href="#" class="text-white">Twitter</a>
-        </div>
+    <footer class="bg-gradient-to-r from-sky-500 to-blue-600 text-white text-center p-4 absolute w-full">
+        <hr>
+        <p class="text-sm text-center">&copy; Siskara Inc. All rights reserved.</p>
     </footer>
 
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
