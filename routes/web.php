@@ -8,13 +8,6 @@ Route::get('/', function () {
 });
 
 
-// Semua User
-Route::get('/about', function () {
-    return view('about');
-});
-
-
-
 // Mahasiswa
 Route::get('/dashboard-mhs', function () {
     return view('mhs/dashboard-mhs');
@@ -37,10 +30,6 @@ Route::get('/persetujuanIRS-doswal', function () {
 
 Route::get('/rekap-doswal', function () {
     return view('doswal/rekap-doswal');
-});
-
-Route::get('/nilai-doswal', function () {
-    return view('doswal/nilai-doswal');
 });
 
 
