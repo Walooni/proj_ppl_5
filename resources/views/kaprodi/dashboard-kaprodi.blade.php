@@ -68,10 +68,10 @@
             </div>
 
             <!-- Statistics -->
-            {{-- <button class="p-6 w-full bg-gray-300 rounded-lg text-center hover:bg-gray-400 hover:text-white active:bg-opacity-80">
+            <button class="p-6 w-full bg-gray-300 rounded-lg text-center hover:bg-gray-400 hover:text-white active:bg-opacity-80">
                 <p class="text-lg">Jumlah Kelas</p>
                 <p class="text-4xl font-bold">50</p>
-            </button> --}}
+            </button>
             <div class="grid grid-cols-3 gap-4 mt-4">
                 <button class="p-6 bg-gray-300 rounded-lg text-center hover:bg-gray-400 hover:text-white active:bg-opacity-80">
                     <p class="text-lg">Jumlah Ruang</p>
@@ -98,3 +98,10 @@
 </body>
 
 </html>
+
+{{-- @extends('layouts.app')
+
+@section('content')
+    <h1 class="text-2xl font-bold">Dashboard Kaprodi</h1>
+    <p>Welcome to the Kaprodi Dashboard!</p>
+@endsection --}}
