@@ -43,7 +43,7 @@
         <!-- Main Content -->
         <main class="w-3/4 p-8 h-screen">
             <div class="flex justify-between items-center mb-6">
-                <h1 class="text-5xl font-bold">Overview</h1>
+                <h1 class="text-5xl font-bold">Dashboard</h1>
                 <div class="relative">
                     <input type="text" placeholder="Search"
                         class="pl-4 pr-10 py-2 rounded-full bg-gray-200 text-gray-700 focus:outline-none">
