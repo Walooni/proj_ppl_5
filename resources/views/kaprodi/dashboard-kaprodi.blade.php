@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @vite('resources/css/app.css')
-    <title>SISKARA Dashboard Doswal</title>
+    <title>SISKARA Dashboard Ketua Program Studi</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -19,23 +19,27 @@
                 <div class="w-24 h-24 mx-auto bg-gray-400 rounded-full mb-3 bg-center bg-contain bg-no-repeat" style="background-image: url(img/fsm.jpg)">
 
                 </div>
-                <h2 class="text-lg text-black font-bold">Ucok, S.Kom</h2>
-                <p class="text-xs text-gray-800">NIDN 001</p>
+                <h2 class="text-lg text-black font-bold">Aris Sugiharto, S.Kom</h2>
+                <p class="text-xs text-gray-800">NIDN 1234567890</p>
                 <p class="text-sm bg-sky-700 rounded-full px-3 py-1 mt-2 font-semibold">Dosen</p>
                 <button class="text-sm w-full bg-red-700 py-1 rounded-full mb-4 mt-2 font-semibold hover:bg-opacity-70">Logout</button>
             </div>
             <nav class="space-y-4">
-                <a href="{{ url('/dashboard-doswal') }}"
+                <a href="{{ url('/dashboard-kaprodi') }}"
                     class="flex items-center space-x-2 p-2 bg-sky-800 rounded-xl text-white hover:bg-opacity-70">
                     <span>Dashboard</span>
                 </a>
-                <a href="{{ url('/persetujuanIRS-doswal') }}"
+                <a href="{{ url('/manajemen-jadwal-kaprodi') }}"
                     class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700 hover:bg-gray-700 hover:text-white">
-                    <span>Persetujuan IRS</span>
+                    <span>Manajemen Jadwal</span>
                 </a>
-                <a href="{{ url('/rekap-doswal') }}"
+                <a href="{{ url('/monitoring-kaprodi') }}"
                     class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700 hover:bg-gray-700 hover:text-white">
-                    <span>Rekap Mahasiswa</span>
+                    <span>Monitoring</span>
+                </a>
+                <a href="{{ url('/konsultasi-kaprodi') }}"
+                    class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700 hover:bg-gray-700 hover:text-white">
+                    <span>Konsultasi</span>
                 </a>
             </nav>
         </aside>
@@ -43,7 +47,7 @@
         <!-- Main Content -->
         <main class="w-3/4 p-8 h-screen">
             <div class="flex justify-between items-center mb-6">
-                <h1 class="text-5xl font-bold">Dashboard</h1>
+                <h1 class="text-5xl font-bold">Overview</h1>
                 <div class="relative">
                     <input type="text" placeholder="Search"
                         class="pl-4 pr-10 py-2 rounded-full bg-gray-200 text-gray-700 focus:outline-none">
@@ -65,20 +69,20 @@
 
             <!-- Statistics -->
             <button class="p-6 w-full bg-gray-300 rounded-lg text-center hover:bg-gray-400 hover:text-white active:bg-opacity-80">
-                <p class="text-lg">Total Mahasiswa Perwalian</p>
+                <p class="text-lg">Jumlah Kelas</p>
                 <p class="text-4xl font-bold">50</p>
             </button>
             <div class="grid grid-cols-3 gap-4 mt-4">
                 <button class="p-6 bg-gray-300 rounded-lg text-center hover:bg-gray-400 hover:text-white active:bg-opacity-80">
-                    <p class="text-lg">Belum mengumpulkan IRS</p>
+                    <p class="text-lg">Jumlah Ruang</p>
                     <p class="text-4xl font-bold">10</p>
                 </button>
                 <button class="p-6 bg-gray-300 rounded-lg text-center hover:bg-gray-400 hover:text-white active:bg-opacity-80">
-                    <p class="text-lg">IRS belum disetujui</p>
+                    <p class="text-lg">Jumlah Dosen</p>
                     <p class="text-4xl font-bold">17</p>
                 </button>
                 <button class="p-6 bg-gray-300 rounded-lg text-center hover:bg-gray-400 hover:text-white active:bg-opacity-80">
-                    <p class="text-lg">IRS Disetujui</p>
+                    <p class="text-lg">Jumlah Mata Kuliah</p>
                     <p class="text-4xl font-bold">23</p>
                 </button>
             </div>
@@ -94,3 +98,10 @@
 </body>
 
 </html>
+
+{{-- @extends('layouts.app')
+
+@section('content')
+    <h1 class="text-2xl font-bold">Dashboard Kaprodi</h1>
+    <p>Welcome to the Kaprodi Dashboard!</p>
+@endsection --}}

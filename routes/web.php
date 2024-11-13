@@ -47,10 +47,6 @@ Route::get('/daftarusulan', function () {
     return view('ba/daftarusulan');
 });
 
-
-
-
-
 // Dekan
 Route::get('/dashboard-dekan', function () {
     return view('dekan/dashboard-dekan');
@@ -68,7 +64,22 @@ Route::get('/usulanjadwal', function () {
     return view('dekan/usulanjadwal');
 });
 
-// Kaprodi
+// Ketua Program Studi
+Route::get('/dashboard-kaprodi', function () {
+    return view('kaprodi/dashboard-kaprodi');
+});
+
+Route::get('/manajemen-jadwal-kaprodi', function () {
+    return view('kaprodi/manajemen-jadwal-kaprodi');
+});
+
+Route::get('/monitoring-kaprodi', function () {
+    return view('kaprodi/monitoring-kaprodi');
+});
+
+Route::get('/konsultasi-kaprodi', function () {
+    return view('kaprodi/konsultasi-kaprodi');
+});
 
 
 
