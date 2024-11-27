@@ -19,4 +19,10 @@ class mahasiswa extends Model
     {
         return $this->belongsTo(Dosen::class, 'nidn', 'nidn');
     }
+  
+    public function irs()
+    {
+        return $this->hasMany(irs::class, 'nim', 'nim');
+    }
+
 }
