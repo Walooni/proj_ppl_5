@@ -5,7 +5,10 @@ use Illuminate\Support\Facades\Route;
 //! Default route
 Route::get('/', function () {
     return view('login');
-});
+})->name('login');
+
+Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 // Mahasiswa
