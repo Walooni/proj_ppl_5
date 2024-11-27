@@ -20,12 +20,14 @@ class AuthController extends Controller
 
         if ($account && Hash::check($request->password, $account->password)) {
             Auth::login($account);
-    
+            
             // Redirect berdasarkan role
-            if ($account->mahasiswa) {
+            if ($account->role === 0) {
                 return redirect()->route('dashboard-mhs');
-            } elseif ($account->pembimbing_akademik) {
-                return redirect()->route('dashboard-doswal');
+            } elseif ($account->role === 1) {
+                $nidn = $account->related_id;
+                session(['nidn' => $nidn]);
+                return redirect()->route('dashboard-doswal', ['nidn' => $nidn]);
             }
         } else {
             // Mengirimkan pesan error ke session jika login gagal

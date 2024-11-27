@@ -15,14 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('email')->unique();
             $table->string('password');
-            $table->boolean('mahasiswa')->default(false);
-            $table->boolean('pembimbing_akademik')->default(false);
+            $table->boolean('role');
+            // 0 == mahasiswa
+            // 1 == dosen
+
+            // $table->boolean('mahasiswa')->default(false);
+            // $table->boolean('pembimbing_akademik')->default(false);
+            $table->string('related_id')->unique();
             $table->timestamps();
         });
         
         
     }
-
 
     /**
      * Reverse the migrations.
