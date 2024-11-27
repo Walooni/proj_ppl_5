@@ -1,12 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DosenController;
 
 //! Default route
 Route::get('/', function () {
     return view('login');
-});
+})->name('login');
 
+Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
 // Mahasiswa
 Route::get('/dashboard-mhs', function () {
@@ -20,17 +23,12 @@ Route::get('/irs-mhs', function () {
 });
 
 // Pembimbing Akademik -- Doswal
-Route::get('/dashboard-doswal', function () {
-    return view('doswal/dashboard-doswal');
-});
+Route::get('/dashboard-doswal/{nidn}', [DosenController::class, 'showAll'])->name('dashboard-doswal');
 
-Route::get('/persetujuanIRS-doswal', function () {
-    return view('doswal/persetujuanIRS-doswal');
-});
+Route::get('/persetujuanIRS-doswal/{nidn}', [DosenController::class, 'showPersetujuan'])->name('persetujuanIRS-doswal');
 
-Route::get('/rekap-doswal', function () {
-    return view('doswal/rekap-doswal');
-});
+Route::get('/rekap-doswal/{nidn}', [DosenController::class, 'showRekap'])->name('rekap-doswal');
+
 
 
 
