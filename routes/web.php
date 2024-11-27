@@ -9,6 +9,7 @@ Route::get('/', function () {
     return view('login');
 })->name('login');
 
+
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
 // Mahasiswa

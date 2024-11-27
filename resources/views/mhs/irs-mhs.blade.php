@@ -3,329 +3,200 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  @vite('resources/css/app.css')
   <title>SISKARA - Isian Rencana Semester (IRS)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Resetting some default styles */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-    }
-
-    .container {
-      display: flex;
-    }
-
-    /* Sidebar styling */
+    /* Animasi untuk sidebar */
     .sidebar {
-      background-color: #3a86ff;
-      color: white;
-      width: 250px;
-      height: 100vh;
-      padding: 20px;
-      position: fixed;
       transition: transform 0.3s ease;
     }
 
-    .sidebar.hidden {
+    .sidebar-closed {
       transform: translateX(-100%);
     }
-
-    .sidebar h2 {
-      font-size: 24px;
-      margin-bottom: 40px;
-    }
-
-    .sidebar {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 40px;
-    }
-
-    .profile {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .profile-pic {
-      width: 70px;
-      height: 70px;
-      background-color: #cfcfcf;
-      border-radius: 50%;
-      margin-bottom: 10px;
-    }
-
-    .profile-info h3 {
-      margin-bottom: 5px;
-    }
-
-    .role {
-      background-color: #6ca0ff;
-      padding: 5px 10px;
-      border-radius: 15px;
-      font-size: 12px;
-    }
-
-    .logout {
-      background-color: #ffffff;
-      color: #4285f4;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      margin-top: 15px;
-    }
-
-    .sidebar ul {
-      list-style: none;
-    }
-
-    .sidebar ul li {
-      margin: 20px 0;
-    }
-
-    .sidebar ul li a {
-      text-decoration: none;
-      color: white;
-      font-size: 16px;
-      display: block;
-      padding: 10px;
-      border-radius: 5px;
-    }
-
-    .sidebar ul li a.active,
-    .sidebar ul li a:hover {
-      background-color: #3278cc;
-    }
-
-    /* Content styling */
-    .content {
-      margin-left: 270px;
-      padding: 40px;
-      width: 100%;
-      transition: margin-left 0.3s ease;
-    }
-
-    .content.expanded {
-      margin-left: 70px;
-    }
-
-    .content h1 {
-      font-size: 28px;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    .semester-card {
-      background-color: #f1f1f1;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 18px;
-    }
-
-    .semester-card button {
-      padding: 8px 16px;
-      background-color: #3a86ff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .footer {
-      background-color: #3a86ff;
-      color: white;
-      text-align: center;
-      padding: 10px;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      left: 0;
-    }
-
-    /* Modal styling */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-content {
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      width: 80%;
-      max-width: 800px;
-    }
-
-    .close-btn, .print-btn {
-      background-color: #3a86ff;
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      float: right;
-    }
-
-    /* Toggle button for sidebar */
-    .toggle-btn {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      font-size: 24px;
-      cursor: pointer;
-      z-index: 1000;
-    }
   </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-sky-500 to-blue-600 text-white p-4 flex justify-between items-center">
+    <div class="flex items-center space-x-3">
+        <!-- Tombol menu untuk membuka sidebar -->
+        <button onclick="toggleSidebar()" class="focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+        <!-- Logo dan judul aplikasi -->
+        <h1 class="text-xl font-bold">SISKARA</h1>
+    </div>
+    <nav class="space-x-4">
+        <a href="{{ url('/') }}" class="hover:underline">Home</a>
+        <a href="{{ url('/about') }}" class="hover:underline">About</a>
+    </nav>
+  </header>
+
+  <div class="flex">
+    <!-- Sidebar -->
+      <aside id="sidebar" class="sidebar w-1/5 bg-sky-500 h-screen p-4 text-white sidebar-closed fixed lg:static">
+        <!-- profil -->
+        <div class="p-3 pb-1 bg-gray-300 rounded-3xl text-center mb-6">
+            <div class="w-24 h-24 mx-auto bg-gray-400 rounded-full mb-3 bg-center bg-contain bg-no-repeat"
+                style="background-image: url(img/fsm.jpg)">
+            </div>
+            <h2 class="text-lg text-black font-bold">Budi</h2>
+            <p class="text-xs text-gray-800">NIM 24060122120033</p>
+            <p class="text-sm bg-sky-700 rounded-full px-3 py-1 mt-2 font-semibold">Mahasiswa</p>
+            <a href="{{ route('login') }}" class="text-sm w-full bg-red-700 py-1 rounded-full mb-4 mt-2 text-center block font-semibold hover:bg-opacity-70">Logout</a>
+        </div>
+        <nav class="space-y-4">
+            <a href="{{ url('/dashboard-mhs') }}"
+              class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700 hover:bg-gray-700 hover:text-white">
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ url('/pengisianirs-mhs') }}"
+              class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700 hover:bg-gray-700 hover:text-white">
+                <span>Pengisian IRS</span>
+            </a>
+            <a href="{{ url('/irs-mhs') }}"
+              class="flex items-center space-x-2 p-2 bg-sky-800 rounded-xl text-white hover:bg-opacity-70">
+                <span>IRS</span>
+            </a>
+            <a href="{{ url('/dashboard-mhs') }}"
+              class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700 hover:bg-gray-700 hover:text-white">
+              <span>KHS</span>
+            </a>
+            <a href="{{ url('/dashboard-mhs') }}"
+              class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700 hover:bg-gray-700 hover:text-white">
+              <span>Transkrip</span>
+            </a>
+            <a href="{{ url('/dashboard-mhs') }}"
+              class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700 hover:bg-gray-700 hover:text-white">
+              <span>Konsultasi</span>
+            </a>
+        </nav>
+      </aside>
+
+    <!-- Main Content -->
+    <main class="w-full lg:w-4/5 lg:ml-auto p-8">
+      <span class="toggle-btn text-2xl cursor-pointer mb-4 lg:hidden" onclick="toggleSidebar()">&#9776;</span>
+      <h1 class="text-3xl font-bold mb-6">Isian Rencana Semester (IRS)</h1>
+      <div class="p-6 bg-gray-200 rounded-lg flex justify-between items-center mb-6">
+        <p class="text-lg">Semester 4 <br> Tahun Ajaran 2023/2024 Genap</p>
+        <button onclick="showModal()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Lihat Detail IRS</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal for IRS Detail -->
+  <div class="modal fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden" id="modal">
+    <div class="modal-content bg-white p-6 rounded-lg max-w-2xl w-full relative">
+      <button class="close-btn text-white bg-blue-500 px-3 py-1 rounded-full absolute top-4 right-4" onclick="closeModal()">Tutup</button>
+      <h2 class="text-2xl font-bold mb-4">Isian Rencana Semester 4</h2>
+      <table class="w-full border border-gray-300 text-left">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="p-2 border">No</th>
+            <th class="p-2 border">Kode</th>
+            <th class="p-2 border">Mata Kuliah</th>
+            <th class="p-2 border">Waktu</th>
+            <th class="p-2 border">Kelas</th>
+            <th class="p-2 border">SKS</th>
+            <th class="p-2 border">Ruang</th>
+            <th class="p-2 border">Status</th>
+            <th class="p-2 border">Nama Dosen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="p-2 border">1</td>
+            <td class="p-2 border">PAIK6401</td>
+            <td class="p-2 border">Pemrograman Berorientasi Objek</td>
+            <td class="p-2 border">Selasa, 13:00-15:30</td>
+            <td class="p-2 border">D</td>
+            <td class="p-2 border">3</td>
+            <td class="p-2 border">E101</td>
+            <td class="p-2 border">Baru</td>
+            <td class="p-2 border">Dr. Budi Prasetyo, S.T., M.T.</td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="print-btn bg-blue-500 text-white px-4 py-2 rounded-full mt-4 hover:bg-blue-600" onclick="printPDF()">Cetak IRS</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-r from-sky-500 to-blue-600 text-white text-center p-4 absolute w-full">
+    <hr>
+    <p class="text-sm text-center">&copy; Siskara Inc. All rights reserved.</p>
+  </footer>
+
+  <!-- Script -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
-</head>
-<body>
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('sidebar-closed');
+    }
 
-<div class="container">
-  <!-- Sidebar -->
-  <div class="sidebar hidden" id="sidebar">
-    <h2>SISKARA</h2>
-    <div class="profile">
-      <div class="profile-pic"></div>
-      <div class="profile-info">
-        <h3>Budi Setiawan</h3>
-        <p>NIM 24060122100102</p>
-        <p class="role">Mahasiswa</p>
-      </div>
-      <button class="logout">Logout</button>
-    </div>
-    <ul>
-      <li><a href="dashboard-mhs">Dashboard</a></li>
-      {{-- <li><a href="#">Her Registrasi</a></li> --}}
-      <li><a href="pengisianirs-mhs">Pengisian IRS</a></li>
-      <li><a href="irs-mhs" class="active">IRS</a></li>
-      {{-- <li><a href="#">KHS</a></li>
-      <li><a href="#">Transkrip</a></li>
-      <li><a href="#">Konsultasi</a></li> --}}
-    </ul>
-  </div>
+    function showModal() {
+      document.getElementById('modal').classList.remove('hidden');
+    }
 
-  <!-- Content -->
-  <div class="content expanded" id="content">
-    <span class="toggle-btn" onclick="toggleSidebar()">&#9776;</span>
-    <h1>Isian Rencana Semester (IRS)</h1>
-    <div class="semester-card">
-      <p>Semester 4 <br> Tahun Ajaran 2023/2024 Genap</p>
-      <button onclick="showModal()">Lihat Detail IRS</button>
-    </div>
-  </div>
-</div>
+    function closeModal() {
+      document.getElementById('modal').classList.add('hidden');
+    }
 
-<!-- Modal for IRS Detail -->
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <button class="close-btn" onclick="closeModal()">Tutup</button>
-    <h2>Isian Rencana Semester 4</h2>
-    <table border="1" width="100%" cellpadding="10" cellspacing="0">
-      <tr>
-        <th>No</th>
-        <th>Kode</th>
-        <th>Mata Kuliah</th>
-        <th>Waktu</th>
-        <th>Kelas</th>
-        <th>SKS</th>
-        <th>Ruang</th>
-        <th>Status</th>
-        <th>Nama Dosen</th>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td>PAIK6401</td>
-        <td>Pemrograman Berorientasi Objek</td>
-        <td>Selasa, 13:00-15:30</td>
-        <td>D</td>
-        <td>3</td>
-        <td>E101</td>
-        <td>Baru</td>
-        <td>Dr. Budi Prasetyo, S.T., M.T.</td>
-      </tr>
-      <!-- Tambahkan baris lainnya sesuai dengan gambar -->
-    </table>
-    <button class="print-btn" onclick="printPDF()">Cetak IRS</button>
-  </div>
-</div>
-
-<!-- Footer -->
-<div class="footer">
-  <p>&copy;2024 SISKARA</p>
-  <p>Don’t Forget To Follow Diponegoro University Social Media!</p>
-</div>
-
-<script>
-  function toggleSidebar() {
-    const sidebar = document.getElementById("sidebar");
-    const content = document.getElementById("content");
-    sidebar.classList.toggle("hidden");
-    content.classList.toggle("expanded");
-  }
-
-  function showModal() {
-    document.getElementById("modal").style.display = "flex";
-  }
-
-  function closeModal() {
-    document.getElementById("modal").style.display = "none";
-  }
-
-  function printPDF() {
+    function printPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    // Tambahkan header PDF
+    // Header untuk institusi dan judul dokumen
+    doc.setFontSize(14);
+    doc.text("KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET DAN TEKNOLOGI", 105, 10, { align: "center" });
+    doc.text("FAKULTAS SAINS DAN MATEMATIKA", 105, 16, { align: "center" });
+    doc.text("UNIVERSITAS DIPONEGORO", 105, 22, { align: "center" });
     doc.setFontSize(12);
-    doc.text("Semester 4", 10, 10);
-    doc.text("Tahun Ajaran 2023/2024 Genap", 10, 16);
-    doc.text("Jumlah SKS: 21", 160, 10, null, null, "right");
-    doc.setLineWidth(0.5);
-    doc.line(10, 21, 200, 21); // Garis horizontal di bawah judul
-    
+    doc.text("ISIAN RENCANA STUDI", 105, 30, { align: "center" });
+    doc.text("Semester Ganjil TA 2024/2025", 105, 36, { align: "center" });
+
+    // Data Mahasiswa
     doc.setFontSize(10);
-    doc.text("Nama: Zikry Alfahri", 10, 26);
-    doc.text("NIM: 24060122100102", 10, 32);
-    doc.text("Status: Belum Disetujui Pembimbing Akademik", 10, 38);
+    doc.text("NIM : 24060122120033", 20, 46);
+    doc.text("Nama Mahasiswa : Budi Setiawan", 20, 52);
+    doc.text("Program Studi : Informatika S1", 20, 58);
+    doc.text("Dosen Wali : Adhe Setya Pramayoga, M.T.", 20, 64);
 
-    // Tambahkan judul untuk tabel
-    doc.setFontSize(12);
-    doc.text("Isian Rencana Semester 4", 10, 46);
-    
-
-    // Gunakan autoTable untuk memasukkan tabel
+    // Tabel IRS
     doc.autoTable({
-      startY: 52,
-      html: ".modal-content table", // pastikan ini merujuk ke tabel dalam modal
-      styles: { fontSize: 10 }
+        startY: 70,
+        head: [['No', 'Kode', 'Mata Kuliah', 'Kelas', 'SKS', 'Ruang', 'Status', 'Nama Dosen', 'Waktu']],
+        body: [
+            ['1', 'PAIK6401', 'Pemrograman Berorientasi Objek', 'D', '3', 'E101', 'Baru', 'Dr. Budi Prasetyo, S.T., M.T.', 'Selasa, 13:00-15:30'],
+            // Tambahkan data mata kuliah lainnya di sini jika ada
+        ],
+        styles: { fontSize: 10 },
+        headStyles: { fillColor: [217, 217, 217] },
     });
+
+    // Tanda tangan
+    doc.text("Semarang, 03 November 2024", 140, doc.lastAutoTable.finalY + 10);
+    doc.text("Pembimbing Akademik (Dosen Wali)", 20, doc.lastAutoTable.finalY + 30);
+    doc.text("Nama Mahasiswa,", 140, doc.lastAutoTable.finalY + 30);
+
+    doc.text("Adhe Setya Pramayoga, M.T.", 20, doc.lastAutoTable.finalY + 45);
+    doc.text("Budi Setiawan", 140, doc.lastAutoTable.finalY + 45);
+
+    doc.text("NIP. 199112092024061001", 20, doc.lastAutoTable.finalY + 50);
+    doc.text("NIM. 24060122120033", 140, doc.lastAutoTable.finalY + 50);
 
     // Simpan PDF
     doc.save("IRS_Semester_4.pdf");
-  }
-</script>
+}
+
+  </script>
 
 </body>
 </html>

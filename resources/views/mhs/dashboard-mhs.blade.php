@@ -1,189 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <style>
-    .sidebar {
-      height: 100vh;
-      background-color: #4F9AC3;
-      color: white;
-    }
-    .profile-img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-    }
-    .nav-link {
-      color: black;
-    }
-    .academic-card {
-      background-color: #3366FF;
-      color: white;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      background-color: #53BAF3;
-      color: white;
-    }
-  </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-custom" style="background-color: #53BAF3;">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">SISKARA</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="#">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Profile</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-  <div class="container-fluid">
-    <div class="row">
-      <!-- Sidebar -->
-      <nav class="col-md-3 col-lg-2 d-md-block sidebar p-3">
-        <div class="text-center">
-          <img src="profile.jpg" alt="Profile" class="profile-img mb-3">
-          <h2>Budi Setiawan</h2>
-          <p>NIM 24060122100102</p>
-          <button class="btn btn-light btn-sm w-100 mb-2">Mahasiswa</button>
-          <button class="btn btn-outline-light btn-sm w-100">Logout</button>
-        </div>
-        <ul class="nav flex-column mt-4">
-          <li class="nav-item">
-            <a class="nav-link" href="#">Dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Her Registrasi</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pengisianirs-mhs">Pengisian IRS</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="irs-mhs">IRS</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">KHS</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Transkrip</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Konsultasi</a>
-          </li>
-        </ul>
-      </nav>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @vite('resources/css/app.css')
+    <title>Dashboard Mahasiswa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Animasi untuk sidebar */
+        .sidebar {
+            transition: transform 0.3s ease;
+        }
 
-      <!-- Main Content -->
-      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <!-- Status Akademik -->
-        <div class="row mt-3">
-            <div class="col-md-6">
-                <h3>Status Akademik</h3>
+        .sidebar-closed {
+            transform: translateX(-100%);
+        }
+
+        /* Sidebar terbuka */
+        .sidebar-open {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-sky-500 to-blue-600 text-white p-4 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <!-- Tombol menu untuk membuka sidebar -->
+            <button onclick="toggleSidebar()" class="focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            <!-- Logo dan judul aplikasi -->
+            <h1 class="text-xl font-bold">SISKARA</h1>
+        </div>
+        <nav class="space-x-4">
+            <a href="{{ url('/') }}" class="hover:underline">Home</a>
+            <a href="{{ url('/about') }}" class="hover:underline">About</a>
+        </nav>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar w-1/5 bg-sky-500 h-screen p-4 text-white sidebar-closed fixed lg:static">
+            <!-- profil -->
+            <div class="p-3 pb-1 bg-gray-300 rounded-3xl text-center mb-6">
+                <div class="w-24 h-24 mx-auto bg-gray-400 rounded-full mb-3 bg-center bg-contain bg-no-repeat"
+                     style="background-image: url(img/fsm.jpg)"></div>
+                <h2 class="text-lg text-black font-bold">Budi</h2>
+                <p class="text-xs text-gray-800">NIM 24060122120033</p>
+                <p class="text-sm bg-sky-700 rounded-full px-3 py-1 mt-2 font-semibold">Mahasiswa</p>
+                <a href="{{ route('login') }}" class="text-sm w-full bg-red-700 py-1 rounded-full mb-4 mt-2 text-center block font-semibold hover:bg-opacity-70">Logout</a>
+            </div>
+            <nav class="space-y-4">
+                <a href="{{ url('/dashboard-mhs') }}"
+                   class="flex items-center space-x-2 p-2 bg-sky-800 rounded-xl text-white hover:bg-opacity-70">
+                    <span>Dashboard</span>
+                </a>
+                <a href="{{ url('/pengisianirs-mhs') }}"
+                   class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700 hover:bg-gray-700 hover:text-white">
+                    <span>Pengisian IRS</span>
+                </a>
+                <a href="{{ url('/irs-mhs') }}"
+                   class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700 hover:bg-gray-700 hover:text-white">
+                    <span>IRS</span>
+                </a>
+                <a href="{{ url('/dashboard-mhs') }}"
+                   class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700 hover:bg-gray-700 hover:text-white">
+                    <span>KHS</span>
+                </a>
+                <a href="{{ url('/dashboard-mhs') }}"
+                   class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700 hover:bg-gray-700 hover:text-white">
+                    <span>Transkrip</span>
+                </a>
+                <a href="{{ url('/dashboard-mhs') }}"
+                   class="flex items-center space-x-2 p-2 bg-gray-300 rounded-xl text-gray-700 hover:bg-gray-700 hover:text-white">
+                    <span>Konsultasi</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="w-full lg:w-4/5 lg:ml-auto p-8">
+            <!-- Status Akademik -->
+            <div class="mb-6">
+                <h3 class="text-2xl font-bold mb-2">Status Akademik</h3>
                 <p>Dosen Wali: Adit Saputra, S.Kom, M.Kom (NIP: 122341431414143415)</p>
                 <p>Semester Akademik Sekarang: 2024/2025 Ganjil</p>
                 <p>Semester Studi: 4</p>
-                <p>Status: -</p>
+                <p>Status: Aktif</p>
             </div>
-            <div class="col-md-6">
-                <h3>Prestasi Akademik</h3>
-                <div class="row">
-                    <div class="col-md-6">
-                      <h3>IPK</h3>
-                      <p class="display-5">3.81</p>
-                    </div>
-                    <div class="col-md-6">
-                      <h3>SKSk</h3>
-                      <p class="display-5">85</p>
-                    </div>
-                  </div>
+
+            <!-- Prestasi Akademik -->
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="p-4 bg-gray-300 rounded-lg text-center">
+                    <h3 class="text-lg font-semibold">IPK</h3>
+                    <p class="text-4xl font-bold">3.81</p>
+                </div>
+                <div class="p-4 bg-gray-300 rounded-lg text-center">
+                    <h3 class="text-lg font-semibold">SKS</h3>
+                    <p class="text-4xl font-bold">85</p>
+                </div>
             </div>
-        </div>
 
-        <!-- Informasi Perubahan Jadwal -->
-        <div class="mt-4">
-          <h3>Informasi Perubahan Jadwal Mata Kuliah</h3>
-          <table class="table table-bordered mt-2">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Mata Kuliah</th>
-                <th>Pertemuan</th>
-                <th>Jadwal Pengganti</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>Teori Bahasa dan Otomata</td>
-                <td>2</td>
-                <td>Jumat, 30 Agustus 2024, 15:30 - 18:50, A103</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+            <!-- Informasi Perubahan Jadwal -->
+            <div class="mb-6">
+                <h3 class="text-2xl font-bold mb-2">Informasi Perubahan Jadwal Mata Kuliah</h3>
+                <table class="w-full bg-white rounded-lg overflow-hidden shadow-lg">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="py-2 px-4 text-left">No</th>
+                            <th class="py-2 px-4 text-left">Mata Kuliah</th>
+                            <th class="py-2 px-4 text-left">Pertemuan</th>
+                            <th class="py-2 px-4 text-left">Jadwal Pengganti</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b">
+                            <td class="py-2 px-4">1</td>
+                            <td class="py-2 px-4">Teori Bahasa dan Otomata</td>
+                            <td class="py-2 px-4">2</td>
+                            <td class="py-2 px-4">Jumat, 30 Agustus 2024, 15:30 - 18:50, A103</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-        <!-- Jadwal Kuliah -->
-        <div class="mt-4">
-          <h3>Jadwal Kuliah - September 2024</h3>
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th>Senin</th>
-                <th>Selasa</th>
-                <th>Rabu</th>
-                <th>Kamis</th>
-                <th>Jumat</th>
-                <th>Sabtu</th>
-                <th>Minggu</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>13:00 Teori Bah...</td>
-                <td>09:40 Pembelaj...</td>
-                <td>09:40 Pembelaj...</td>
-                <td>15:40 Komputas...</td>
-                <td>07:00 Sistem In...</td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>13:00 Teori Bah...</td>
-                <td>09:40 Pembelaj...</td>
-                <td>09:40 Pembelaj...</td>
-                <td>15:40 Komputas...</td>
-                <td>07:00 Sistem In...</td>
-                <td></td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </main>
+            <!-- Jadwal Kuliah -->
+            <div class="mb-6">
+                <h3 class="text-2xl font-bold mb-2">Jadwal Kuliah - September 2024</h3>
+                <table class="w-full bg-white rounded-lg overflow-hidden shadow-lg">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="py-2 px-4 text-left">Senin</th>
+                            <th class="py-2 px-4 text-left">Selasa</th>
+                            <th class="py-2 px-4 text-left">Rabu</th>
+                            <th class="py-2 px-4 text-left">Kamis</th>
+                            <th class="py-2 px-4 text-left">Jumat</th>
+                            <th class="py-2 px-4 text-left">Sabtu</th>
+                            <th class="py-2 px-4 text-left">Minggu</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b">
+                            <td class="py-2 px-4">13:00 Teori Bah...</td>
+                            <td class="py-2 px-4">09:40 Pembelaj...</td>
+                            <td class="py-2 px-4">09:40 Pembelaj...</td>
+                            <td class="py-2 px-4">15:40 Komputas...</td>
+                            <td class="py-2 px-4">07:00 Sistem In...</td>
+                            <td class="py-2 px-4"></td>
+                            <td class="py-2 px-4"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
     </div>
-  </div>
 
-  <footer>
-    <p>©2024 SISKARA - Don't Forget To Follow Diponegoro University Social Media!</p>
-  </footer>
-
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-sky-500 to-blue-600 text-white text-center p-4 absolute w-full">
+        <hr>
+        <p class="text-sm text-center">&copy; Siskara Inc. All rights reserved.</p>
+    </footer>
+    
+    <!-- Script untuk toggle sidebar -->
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('sidebar-open');
+            sidebar.classList.toggle('sidebar-closed');
+        }
+    </script>
 </body>
 </html>
