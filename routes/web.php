@@ -11,6 +11,7 @@ Route::get('/', function () {
 
 
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Mahasiswa
 Route::get('/dashboard-mhs', function () {
