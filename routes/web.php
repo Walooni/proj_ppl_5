@@ -34,39 +34,39 @@ Route::get('/rekap-doswal', function () {
 
 
 
-// Bagian Akademik
-Route::get('/dashboard-ba', function () {
-    return view('ba/dashboard-ba');
-});
+// // Bagian Akademik
+// Route::get('/dashboard-ba', function () {
+//     return view('ba/dashboard-ba');
+// });
 
-Route::get('/buatusulan', function () {
-    return view('ba/buatusulan');
-});
+// Route::get('/buatusulan', function () {
+//     return view('ba/buatusulan');
+// });
 
-Route::get('/daftarusulan', function () {
-    return view('ba/daftarusulan');
-});
-
-
+// Route::get('/daftarusulan', function () {
+//     return view('ba/daftarusulan');
+// });
 
 
 
-// Dekan
-Route::get('/dashboard-dekan', function () {
-    return view('dekan/dashboard-dekan');
-});
 
-Route::get('/aturgelombang', function () {
-    return view('dekan/aturgelombang');
-});
 
-Route::get('/usulanruang', function () {
-    return view('dekan/usulanruang');
-});
+// // Dekan
+// Route::get('/dashboard-dekan', function () {
+//     return view('dekan/dashboard-dekan');
+// });
 
-Route::get('/usulanjadwal', function () {
-    return view('dekan/usulanjadwal');
-});
+// Route::get('/aturgelombang', function () {
+//     return view('dekan/aturgelombang');
+// });
+
+// Route::get('/usulanruang', function () {
+//     return view('dekan/usulanruang');
+// });
+
+// Route::get('/usulanjadwal', function () {
+//     return view('dekan/usulanjadwal');
+// });
 
 // Kaprodi
 
