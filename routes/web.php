@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+
 use App\Http\Controllers\DosenController;
+use App\Http\Controllers\MahasiswaController;
 
 //! Default route
 Route::get('/', function () {
@@ -13,9 +15,12 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Mahasiswa
-Route::get('/dashboard-mhs', function () {
-    return view('mhs/dashboard-mhs');
-});
+
+Route::get('dashboard-mhs', [MahasiswaController::class, 'dashboard'])->name('dashboard-mhs');
+
+// Route::get('/dashboard-mhs', function () {
+//     return view('mhs/dashboard-mhs');
+// })->name('dashboard-mhs');
 Route::get('/pengisianirs-mhs', function () {
     return view('mhs/pengisianirs-mhs');
 });
