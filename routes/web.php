@@ -17,16 +17,18 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Mahasiswa
 
 Route::get('dashboard-mhs', [MahasiswaController::class, 'dashboard'])->name('dashboard-mhs');
+Route::get('pengisianirs-mhs', [MahasiswaController::class, 'pengisianIrs'])->name('pengisianirs-mhs');
+Route::get('irs-mhs', [MahasiswaController::class, 'irs'])->name('irs-mhs');
 
 // Route::get('/dashboard-mhs', function () {
 //     return view('mhs/dashboard-mhs');
 // })->name('dashboard-mhs');
-Route::get('/pengisianirs-mhs', function () {
-    return view('mhs/pengisianirs-mhs');
-});
-Route::get('/irs-mhs', function () {
-    return view('mhs/irs-mhs');
-});
+// Route::get('/pengisianirs-mhs', function () {
+//     return view('mhs/pengisianirs-mhs');
+// });
+// Route::get('/irs-mhs', function () {
+//     return view('mhs/irs-mhs');
+// });
 
 // Pembimbing Akademik -- Doswal
 

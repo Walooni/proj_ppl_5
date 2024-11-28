@@ -32,5 +32,33 @@ class MahasiswaController extends Controller
         return view('mhs/dashboard-mhs', compact('mahasiswa'));
     }
 
+    public function pengisianIrs()
+    {
+        $nim = session('nim');
+        // Ambil data dosen beserta jumlah mahasiswa perwalian
+        $mahasiswa = mahasiswa::where('nim', $nim)->first();
+        
+        if (!$mahasiswa) {
+            return redirect()->back()->with('error', 'mahasiswa tidak ditemukan.');
+        }
+        
+        // Kirim data ke view
+        return view('mhs/pengisianirs-mhs', compact('mahasiswa'));
+    }
+
+    public function irs()
+    {
+        $nim = session('nim');
+        // Ambil data dosen beserta jumlah mahasiswa perwalian
+        $mahasiswa = mahasiswa::where('nim', $nim)->first();
+        
+        if (!$mahasiswa) {
+            return redirect()->back()->with('error', 'mahasiswa tidak ditemukan.');
+        }
+        
+        // Kirim data ke view
+        return view('mhs/irs-mhs', compact('mahasiswa'));
+    }
+
 
 }
