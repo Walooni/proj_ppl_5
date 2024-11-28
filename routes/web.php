@@ -7,18 +7,10 @@ use App\Http\Controllers\DosenController;
 //! Default route
 Route::get('/', function () {
     return view('login');
-<<<<<<< HEAD
-})->name('login');
-
-Route::post('/login', [AuthController::class, 'login'])->name('login.process');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-=======
 })->name('login');  
   
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
->>>>>>> 6587aac5cfaa3227201331762129080e74dacb21
 
 // Mahasiswa
 Route::get('/dashboard-mhs', function () {
