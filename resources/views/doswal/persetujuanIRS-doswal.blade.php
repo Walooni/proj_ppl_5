@@ -25,15 +25,15 @@
     $menus = [
         (object) [
             "title" => "Dasboard",
-            "path" => "dashboard-doswal/".strval($dosen->nidn),
+            "path" => "dashboard-doswal",
         ],
         (object) [
             "title" => "Persetujuan IRS",
-            "path" => "persetujuanIRS-doswal/".strval($dosen->nidn),
+            "path" => "persetujuanIRS-doswal",
         ],
         (object) [
             "title" => "Rekap Mahasiswa",
-            "path" => "rekap-doswal/".strval($dosen->nidn),
+            "path" => "rekap-doswal",
         ],
 
     ];

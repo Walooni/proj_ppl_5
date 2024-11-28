@@ -11,6 +11,7 @@ Route::get('/', function () {
   
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 // Mahasiswa
 Route::get('/dashboard-mhs', function () {
     return view('mhs/dashboard-mhs');
@@ -23,11 +24,12 @@ Route::get('/irs-mhs', function () {
 });
 
 // Pembimbing Akademik -- Doswal
-Route::get('/dashboard-doswal/{nidn}', [DosenController::class, 'showAll'])->name('dashboard-doswal');
 
-Route::get('/persetujuanIRS-doswal/{nidn}', [DosenController::class, 'showPersetujuan'])->name('persetujuanIRS-doswal');
+Route::get('/dashboard-doswal', [DosenController::class, 'showAll'])->name('dashboard-doswal');
 
-Route::get('/rekap-doswal/{nidn}', [DosenController::class, 'showRekap'])->name('rekap-doswal');
+Route::get('/persetujuanIRS-doswal', [DosenController::class, 'showPersetujuan'])->name('persetujuanIRS-doswal');
+
+Route::get('/rekap-doswal', [DosenController::class, 'showRekap'])->name('rekap-doswal');
 
 
 

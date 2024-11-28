@@ -9,15 +9,25 @@ class Account extends Authenticatable
     protected $fillable = [
         'email', 
         'password', 
-        'mahasiswa', 
-        'pembimbing_akademik', 
+        'role',
+        'related_id',
     ];
 
     protected $hidden = [
         'password',
     ];
 
-   
+    public function mahasiswa()
+    {
+        return $this->belongsTo(mahasiswa::class, 'related_id', 'nim');
+    }
+
+    public function dosen()
+    {
+        return $this->belongsTo(dosen::class, 'related_id', 'nidn');
+    }
+
+    
 
 }
 
