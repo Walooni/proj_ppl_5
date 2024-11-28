@@ -50,8 +50,8 @@
             <div class="p-3 pb-1 bg-gray-300 rounded-3xl text-center mb-6">
                 <div class="w-24 h-24 mx-auto bg-gray-400 rounded-full mb-3 bg-center bg-contain bg-no-repeat"
                      style="background-image: url(img/fsm.jpg)"></div>
-                <h2 class="text-lg text-black font-bold">Budi</h2>
-                <p class="text-xs text-gray-800">NIM 24060122120033</p>
+                <h2 class="text-lg text-black font-bold">{{ $mahasiswa->nama }}</h2>
+                <p class="text-xs text-gray-800">NIM {{$mahasiswa->nim}}</p>
                 <p class="text-sm bg-sky-700 rounded-full px-3 py-1 mt-2 font-semibold">Mahasiswa</p>
                 <a href="{{ route('login') }}" class="text-sm w-full bg-red-700 py-1 rounded-full mb-4 mt-2 text-center block font-semibold hover:bg-opacity-70">Logout</a>
             </div>
@@ -88,10 +88,10 @@
             <!-- Status Akademik -->
             <div class="mb-6">
                 <h3 class="text-2xl font-bold mb-2">Status Akademik</h3>
-                <p>Dosen Wali: Adit Saputra, S.Kom, M.Kom (NIP: 122341431414143415)</p>
+                <p>Dosen Wali: {{$mahasiswa->dosen->nama}}, (NIDN: {{$mahasiswa->dosen->nidn}})</p>
                 <p>Semester Akademik Sekarang: 2024/2025 Ganjil</p>
-                <p>Semester Studi: 4</p>
-                <p>Status: Aktif</p>
+                <p>Semester Studi: {{$mahasiswa->semester}}</p>
+                <p>Status: {{$mahasiswa->status}}</p>
             </div>
 
             <!-- Prestasi Akademik -->

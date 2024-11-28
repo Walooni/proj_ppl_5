@@ -23,7 +23,9 @@ class AuthController extends Controller
             
             // Redirect berdasarkan role
             if ($account->role === 0) {
-                return redirect()->route('dashboard-mhs');
+                $nim = $account->related_id;
+                session(['nim' => $nim]);
+                return redirect()->route('dashboard-mhs', ['nim' => $nim]);
             } elseif ($account->role === 1) {
                 $nidn = $account->related_id;
                 session(['nidn' => $nidn]);
