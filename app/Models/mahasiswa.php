@@ -19,4 +19,13 @@ class mahasiswa extends Model
     {
         return $this->belongsTo(Dosen::class, 'nidn', 'nidn');
     }
+<<<<<<< HEAD
+=======
+  
+    public function irs()
+    {
+        return $this->hasMany(irs::class, 'nim', 'nim');
+    }
+
+>>>>>>> 6587aac5cfaa3227201331762129080e74dacb21
 }

@@ -14,15 +14,33 @@ class AccountSeeder extends Seeder
             [
                 'email' => 'mahasiswa@example.com',
                 'password' => Hash::make('password123'),
-                'mahasiswa' => true,
-                'pembimbing_akademik' => false,
+                'role' => false,
+                // role = false, buat mahasiswa
+                'related_id' => '24060121120002',
             ],
             [
                 'email' => 'pembimbing@example.com',
                 'password' => Hash::make('password123'),
-                'mahasiswa' => false,
-                'pembimbing_akademik' => true,
-            ]
+                'role' => true,
+                // role = true, buat dosen
+                'related_id' => '0627128001',
+            ],
+            [
+                'email' => 'pembimbing2@example.com',
+                'password' => Hash::make('password123'),
+                'role' => true,
+                // role = true, buat dosen
+                'related_id' => '0020048104',
+            ],
         ]);
     }
 }
+
+
+
+
+
+
+
+
+
