@@ -143,18 +143,27 @@
                             </td>
                             <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">{{ $mahasiswa->semester }}</td>
                             <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">
+                                <form action="{{ route('irs.approve', $mahasiswa->nim) }}" method="POST">
+                                    @csrf
+                                    <button type="submit"
+                                        class="text-white bg-sky-500 hover:bg-sky-700 active:bg-sky-400 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                        Setuju
+                                    </button>
+                                </form>
                                 <button type="button"
-                                    class="text-white bg-sky-500 hover:bg-sky-700 active:bg-sky-400 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2">
-                                    Setuju</button>
-                                <button type="button"
-                                    class="text-white bg-amber-400 hover:bg-yellow-600 active:bg-yellow-400 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2">
-                                    Izinkan Ubah IRS</button>
+                                class="text-white bg-amber-400 hover:bg-yellow-600 active:bg-yellow-400 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                Izinkan Ubah IRS</button>
                             </td>
                             <td class="px-6 py-4 border-b border-gray-200 text-center text-sm">
                                 <a href="#" class="font-medium text-blue-600 dark:text-blue-700 hover:underline">Lihat IRS</a>
                             </td>
                         </tr>
                         @endforeach
+                        @if (session('success'))
+                            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+                            {{ session('success') }}
+                            </div>
+                        @endif
 
                     </tbody>
                 </table>

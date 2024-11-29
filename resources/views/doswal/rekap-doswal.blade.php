@@ -134,53 +134,21 @@
                     <!-- Table Body -->
                     <tbody>
                         <!-- Row-->
-                        @foreach ($dosen->mahasiswa as $mahasiswa)
+                        @foreach ($result as $mahasiswa)
                         <tr>
                             <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800 text-center">{{ $loop->iteration }}</td>
                             <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800 text-center">{{ $mahasiswa->nama }}</td>
                             <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">{{ $mahasiswa->nim }}</td>
                             <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">{{ $mahasiswa->semester }}</td>
                             <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">
-                                {{-- {{$mahasiswa->irs->status->Where('nim', $mahasiswa->nim)}} --}}
-                                mengulang
+                                {{$mahasiswa->status}}
                             </td>
                             <td class="px-6 py-4 border-b border-gray-200 text-center text-sm">
                                 <a href="#" class="font-medium text-blue-600 dark:text-blue-700 hover:underline">Lihat</a>
                             </td>
                         </tr>
                         @endforeach
-                        {{-- <!-- Row-->
-                        <tr>
-                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800 text-center">2</td>
-                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800 text-center">Zikry
-                                Alfakhri Akram</td>
-                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">
-                                24060122110001</td>
-                            </td>
-                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">5</td>
-                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">
-                                Belum Disetujui
-                            </td>
-                            <td class="px-6 py-4 border-b border-gray-200 text-center text-sm">
-                                <a href="#" class="font-medium text-blue-600 dark:text-blue-700 hover:underline">Lihat</a>
-                            </td>
-                        </tr>
-                        <!-- Row-->
-                        <tr>
-                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800 text-center">3</td>
-                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800 text-center">Zikry
-                                Alfakhri Akram</td>
-                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">
-                                24060122110001</td>
-                            </td>
-                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">5</td>
-                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">
-                                Sudah Disetujui
-                            </td>
-                            <td class="px-6 py-4 border-b border-gray-200 text-center text-sm">
-                                <a href="#" class="font-medium text-blue-600 dark:text-blue-700 hover:underline">Lihat</a>
-                            </td>
-                        </tr> --}}
+                        
                     </tbody>
                 </table>
             </div>

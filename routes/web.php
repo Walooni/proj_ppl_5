@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\IrsController;
 use App\Http\Controllers\AuthController;
-
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\MahasiswaController;
 
@@ -30,6 +30,7 @@ Route::get('irs-mhs', [MahasiswaController::class, 'irs'])->name('irs-mhs');
 //     return view('mhs/irs-mhs');
 // });
 
+
 // Pembimbing Akademik -- Doswal
 
 Route::get('/dashboard-doswal', [DosenController::class, 'showAll'])->name('dashboard-doswal');
@@ -37,6 +38,8 @@ Route::get('/dashboard-doswal', [DosenController::class, 'showAll'])->name('dash
 Route::get('/persetujuanIRS-doswal', [DosenController::class, 'showPersetujuan'])->name('persetujuanIRS-doswal');
 
 Route::get('/rekap-doswal', [DosenController::class, 'showRekap'])->name('rekap-doswal');
+
+Route::post('/irs/setuju/{nim}', [IrsController::class, 'approve'])->name('irs.approve');
 
 
 
@@ -76,18 +79,4 @@ Route::get('/rekap-doswal', [DosenController::class, 'showRekap'])->name('rekap-
 // });
 
 // Kaprodi
-
-
-
-//? Testing
-
-Route::get('/test', function () {
-    return view('tailwind');
-});
-
-Route::get('/test2', function () {
-    return view('dashboard-gakepake');
-});
-
-
 
