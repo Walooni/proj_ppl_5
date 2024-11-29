@@ -105,16 +105,18 @@
             </div>
 
             <!-- Dropdown filter kategori mahasiswa -->
-            <form class="w-1/5 mb-3">
+            <form method="GET" action="{{ route('irs.filter') }}" class="w-1/5 mb-3">
                 <label for="kategori-irs-mahasiswa" class="block mb-2 text-sm font-medium text-gray-900">Pilih Kategori</label>
-                <select id="kategori-irs-mahasiswa"
+                <select id="kategori-irs-mahasiswa" name="filter"
+                        onchange="this.form.submit()"
                         class="border text-sm rounded-lg block w-full p-2.5 bg-slate-600 border-gray-300 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500">
-                    <option value="semua" selected>Semua</option>
-                    <option value="belum-irs">Belum IRS</option>
-                    <option value="belum-disetujui">Belum Disetujui</option>
-                    <option value="belum-disetujui">Sudah Disetujui</option>
+                    <option value="semua" {{ request('filter') == 'semua' ? 'selected' : '' }}>Semua</option>
+                    <option value="belum-irs" {{ request('filter') == 'belum-irs' ? 'selected' : '' }}>Belum IRS</option>
+                    <option value="belum-disetujui" {{ request('filter') == 'belum-disetujui' ? 'selected' : '' }}>Belum Disetujui</option>
+                    <option value="sudah-disetujui" {{ request('filter') == 'sudah-disetujui' ? 'selected' : '' }}>Sudah Disetujui</option>
                 </select>
             </form>
+            
 
             <!-- Tabel Mahasiswa -->
             <div class="container overflow-y-auto h-3/5">

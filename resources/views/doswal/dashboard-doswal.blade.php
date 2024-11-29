@@ -121,15 +121,15 @@
             </button>
             <div class="grid grid-cols-3 gap-4 mt-4">
                 <button class="p-6 bg-gray-300 rounded-lg text-center hover:bg-gray-400 hover:text-white active:bg-opacity-80">
-                    <p class="text-lg">Belum mengumpulkan IRS</p>
+                    <a href="{{ route('irs.filter.dashboard') }}?filter=belum-irs"><p class="text-lg hover:underline ">Belum mengumpulkan IRS</p></a>
                     <p class="text-4xl font-bold">99</p>
                 </button>
                 <button class="p-6 bg-gray-300 rounded-lg text-center hover:bg-gray-400 hover:text-white active:bg-opacity-80">
-                    <p class="text-lg">IRS belum disetujui</p>
+                    <a href="{{ route('irs.filter.dashboard') }}?filter=belum-disetujui"><p class="text-lg hover:underline">IRS Belum Disetujui</p></a>
                     <p class="text-4xl font-bold">99</p>
                 </button>
                 <button class="p-6 bg-gray-300 rounded-lg text-center hover:bg-gray-400 hover:text-white active:bg-opacity-80">
-                    <p class="text-lg">IRS Disetujui</p>
+                    <a href="{{ route('irs.filter.dashboard') }}?filter=sudah-disetujui"><p class="text-lg hover:underline">IRS Disetujui</p></a>
                     <p class="text-4xl font-bold">99</p>
                 </button>
             </div>

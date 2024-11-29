@@ -41,6 +41,9 @@ Route::get('/rekap-doswal', [DosenController::class, 'showRekap'])->name('rekap-
 
 Route::post('/irs/setuju/{nim}', [IrsController::class, 'approve'])->name('irs.approve');
 
+Route::get('/irs/filter', [IrsController::class, 'filter'])->name('irs.filter');
+
+Route::get('/irs/filter/dashboard', [IrsController::class, 'filter_dashboard'])->name('irs.filter.dashboard');
 
 
 

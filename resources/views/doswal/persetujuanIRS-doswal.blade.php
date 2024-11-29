@@ -160,9 +160,9 @@
                         </tr>
                         @endforeach
                         @if (session('success'))
-                            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
-                            {{ session('success') }}
-                            </div>
+                        <div id="irs-setuju-notification" class="bg-green-100 border border-green-400 text-green-700 mb-4 px-4 py-3 rounded relative">
+                        {{ session('success') }}
+                        </div>
                         @endif
 
                     </tbody>
@@ -182,6 +182,15 @@
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('sidebar-closed');
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+        const flashMessage = document.getElementById('irs-setuju-notification');
+        if (flashMessage) {
+            setTimeout(() => {
+                flashMessage.style.display = 'none';
+            }, 3000); // Hilangkan pesan setelah 3 detik
+        }
+        });
     </script>
 
 </body>
