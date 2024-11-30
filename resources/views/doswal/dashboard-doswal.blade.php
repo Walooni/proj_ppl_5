@@ -110,7 +110,7 @@
             <div class="mb-6">
                 <div class="p-4 bg-gray-200 rounded-lg text-gray-700">
                     <p class="text-lg">Tahun Ajaran</p>
-                    <p class="text-2xl font-semibold">2024/2025 Ganjil</p>
+                    <p class="text-2xl font-semibold">{{ $tahun->tahun_ajaran }}</p>
                 </div>
             </div>
 
@@ -122,15 +122,15 @@
             <div class="grid grid-cols-3 gap-4 mt-4">
                 <button class="p-6 bg-gray-300 rounded-lg text-center hover:bg-gray-400 hover:text-white active:bg-opacity-80">
                     <a href="{{ route('irs.filter.dashboard') }}?filter=belum-irs"><p class="text-lg hover:underline ">Belum mengumpulkan IRS</p></a>
-                    <p class="text-4xl font-bold">99</p>
+                    <p class="text-4xl font-bold">{{ $belum_irs }}</p>
                 </button>
                 <button class="p-6 bg-gray-300 rounded-lg text-center hover:bg-gray-400 hover:text-white active:bg-opacity-80">
                     <a href="{{ route('irs.filter.dashboard') }}?filter=belum-disetujui"><p class="text-lg hover:underline">IRS Belum Disetujui</p></a>
-                    <p class="text-4xl font-bold">99</p>
+                    <p class="text-4xl font-bold">{{ $belum_disetujui }}</p>
                 </button>
                 <button class="p-6 bg-gray-300 rounded-lg text-center hover:bg-gray-400 hover:text-white active:bg-opacity-80">
                     <a href="{{ route('irs.filter.dashboard') }}?filter=sudah-disetujui"><p class="text-lg hover:underline">IRS Disetujui</p></a>
-                    <p class="text-4xl font-bold">99</p>
+                    <p class="text-4xl font-bold">{{ $sudah_disetujui }}</p>
                 </button>
             </div>
         </main>

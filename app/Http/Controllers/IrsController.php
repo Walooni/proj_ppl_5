@@ -23,6 +23,15 @@ class IrsController extends Controller
         return redirect()->back()->with('success', 'IRS berhasil disetujui!');
     }
 
+    public function izin($nim)
+    {
+        DB::table('irs')
+            ->where('nim', $nim)
+            ->update(['tanggal_disetujui' => null]);
+            // ->update(['tanggal_disetujui' => '2014-11-29']);
+        return redirect()->back()->with('success', 'IRS diizinkan untuk diubah');
+    }
+
     public function filter(Request $request)
     {
         // Ambil filter dari request
@@ -30,6 +39,10 @@ class IrsController extends Controller
         // @dd($request->input('filter', 'semua'));
 
         $nidn = session('nidn');
+        $tahun = DB::table('tahun_ajaran')
+        ->select('tahun_ajaran')
+        ->orderByDesc('tahun_ajaran')
+        ->first();
 
         // Ambil data dosen beserta jumlah mahasiswa perwalian
         $dosen = dosen::with('mahasiswa')->where('nidn', $nidn)->first();
@@ -37,6 +50,7 @@ class IrsController extends Controller
         // Query data berdasarkan filter
         $query = DB::table('mahasiswa as m')
             ->leftJoin('irs as i', 'm.nim', '=', 'i.nim')
+            ->where('nidn', '=', $nidn)
             ->select(
                 'm.nim',
                 'm.nama',
@@ -61,7 +75,7 @@ class IrsController extends Controller
         $result = $query->get();
 
         // Kirim data ke view
-        return view('doswal/rekap-doswal', compact('result', 'dosen'));
+        return view('doswal/rekap-doswal', compact('result', 'dosen', 'tahun'));
     }
 
     public function filter_dashboard(Request $request)
@@ -70,13 +84,20 @@ class IrsController extends Controller
         $filter = $request->input('filter', 'semua');
 
         $nidn = session('nidn');
+        $tahun = DB::table('tahun_ajaran')
+        ->select('tahun_ajaran')
+        ->orderByDesc('tahun_ajaran')
+        ->first();
 
         // Ambil data dosen beserta jumlah mahasiswa perwalian
         $dosen = dosen::with('mahasiswa')->where('nidn', $nidn)->first();
 
         // Query data berdasarkan filter
-        $query = DB::table('mahasiswa as m')
+        $filternim = DB::table('mahasiswa as m')
+            ->where('m.nidn', '=', $nidn);
+        $query = $filternim
             ->leftJoin('irs as i', 'm.nim', '=', 'i.nim')
+            ->where('nidn', '=', $nidn)
             ->select(
                 'm.nim',
                 'm.nama',
@@ -101,7 +122,7 @@ class IrsController extends Controller
         $result = $query->get();
 
         // Kirim data ke view
-        return view('doswal/rekap-doswal', compact('result', 'dosen', 'filter'));
+        return view('doswal/rekap-doswal', compact('result', 'dosen', 'filter', 'tahun'));
     }
 
 }
