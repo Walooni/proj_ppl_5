@@ -49,8 +49,9 @@ class IrsController extends Controller
 
         // Query data berdasarkan filter
         $query = DB::table('mahasiswa as m')
-            ->leftJoin('irs as i', 'm.nim', '=', 'i.nim')
+            ->distinct()
             ->where('nidn', '=', $nidn)
+            ->leftJoin('irs as i', 'm.nim', '=', 'i.nim')
             ->select(
                 'm.nim',
                 'm.nama',
@@ -96,8 +97,8 @@ class IrsController extends Controller
         $filternim = DB::table('mahasiswa as m')
             ->where('m.nidn', '=', $nidn);
         $query = $filternim
+            ->distinct()
             ->leftJoin('irs as i', 'm.nim', '=', 'i.nim')
-            ->where('nidn', '=', $nidn)
             ->select(
                 'm.nim',
                 'm.nama',

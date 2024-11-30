@@ -135,7 +135,7 @@
                     <!-- Table Body -->
                     <tbody>
                         <!-- Row-->
-                        @foreach ($dosen->mahasiswa as $mahasiswa)
+                        @foreach ($mhs_filter as $mahasiswa)
                         <tr>
                             <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800 text-center">{{ $loop->iteration }}</td>
                             <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-800 text-center">{{ $mahasiswa->nama }}</td>
