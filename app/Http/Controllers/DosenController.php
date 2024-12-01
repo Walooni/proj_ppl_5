@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\irs;
 use App\Models\dosen;
+use App\Models\jadwal;
 use App\Models\mahasiswa;
 use Illuminate\Http\Request;
+use PhpParser\Node\Expr\Clone_;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -138,4 +140,70 @@ class DosenController extends Controller
     }
 
 
+    public function showInformasi ($nim){
+        // ambil nidn
+        $nidn = session('nidn');
+
+        // ambil tahun ajaran
+        $tahun = DB::table('tahun_ajaran')
+        ->select('tahun_ajaran')
+        ->orderByDesc('tahun_ajaran')
+        ->first();
+        
+        // Ambil data dosen
+        $dosen = dosen::all()->where('nidn', $nidn)->first();
+
+        // ambil data mahasiswa terpilih
+        $result = DB::table('mahasiswa as m')
+        ->distinct()
+        ->where('nidn','=',$nidn)
+        ->leftJoin('irs as i', 'm.nim', '=', 'i.nim')
+        ->select(
+            'm.nim',
+            'm.nama',
+            'm.semester',
+            DB::raw("CASE
+                WHEN i.nim IS NULL THEN 'Belum IRS'
+                WHEN i.tanggal_disetujui IS NULL THEN 'Belum Disetujui'
+                ELSE 'Sudah disetujui'
+            END AS status")
+        )
+        ->where('m.nim',$nim)
+        ->first();
+
+        // ambil data jadwal 
+        $irs = DB::table('irs as i')
+        ->distinct()
+        ->where('i.nim', '=', $nim)
+        ->join('jadwal as j', 'i.id_jadwal', '=', 'j.id_jadwal')
+        ->join('ruang as r', 'r.id_ruang', '=', 'j.id_ruang')
+        ->join('matakuliah as m', 'j.kode_mk', '=', 'm.kode_mk')
+        ->select(
+            'm.kode_mk',
+            'm.nama',
+            'm.sks',
+            'j.kelas',
+            'r.id_ruang',
+            'i.status',
+            DB::raw("
+                CASE j.hari
+                    WHEN 1 THEN 'Senin'
+                    WHEN 2 THEN 'Selasa'
+                    WHEN 3 THEN 'Rabu'
+                    WHEN 4 THEN 'Kamis'
+                    WHEN 5 THEN 'Jumat'
+                    WHEN 6 THEN 'Sabtu'
+                    WHEN 7 THEN 'Minggu'
+                    ELSE 'Tidak Diketahui'
+                END AS hari
+            "),
+            'j.waktu_mulai',
+            'j.waktu_selesai',
+        )
+        ->get();
+    
+
+
+        return view('doswal/informasi-irs-doswal', compact('dosen', 'tahun', 'result', 'irs'));
+    }
 }

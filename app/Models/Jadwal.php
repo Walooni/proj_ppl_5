@@ -4,7 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Jadwal extends Model
+class jadwal extends Model
 {
     use HasFactory;
 
@@ -29,21 +29,25 @@ class Jadwal extends Model
     {
         return $this->belongsTo(TahunAjaran::class, 'id_tahun', 'id_tahun');
     }
+    
+    public function ruang()
+    {
+        return $this->belongsTo(ruang::class, 'id_ruang', 'id_ruang');
+    }
+    
+    public function matkul()
+    {
+        return $this->belongsTo(matkul::class, 'kode_mk', 'kode_mk');
+    }
+    
+    public function prodi()
+    {
+        return $this->belongsTo(prodi::class, 'id_prodi', 'id_prodi');
+    }
+    
+    public function irs()
+    {
+        return $this->hasMany(irs::class, 'id_jadwal', 'id_jadwal');
+    }
 }
 
-
-
-
-// protected $table = 'jadwal';
-    // protected $primaryKey = 'id_jadwal';
-
-    // protected $fillable = [
-    //     'kelas',
-    //     'hari',
-    //     'waktu_mulai',
-    //     'waktu_selesai',
-    //     'nidn',
-    //     'kode_mk',
-    //     'id_ruang',
-    //     'id_tahun',
-    // ];

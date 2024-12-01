@@ -39,6 +39,8 @@ Route::get('/persetujuanIRS-doswal', [DosenController::class, 'showPersetujuan']
 
 Route::get('/rekap-doswal', [DosenController::class, 'showRekap'])->name('rekap-doswal');
 
+Route::get('/rekap-doswal/informasi-irs/{nim}', [DosenController::class, 'showInformasi'])->name('rekap-doswal.informasi-irs');
+
 Route::post('/irs/setuju/{nim}', [IrsController::class, 'approve'])->name('irs.approve');
 
 Route::post('/irs/izin/{nim}', [IrsController::class, 'izin'])->name('irs.izin');

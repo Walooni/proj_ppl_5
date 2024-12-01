@@ -14,9 +14,16 @@ class irs extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
+
     // Relasi ke Mahasiswa
     public function mahasiswa()
     {
         return $this->belongsTo(mahasiswa::class,'nim', 'nim');
     }
+    
+    public function jadwal()
+    {
+        return $this->belongsTo(jadwal::class,'id_jadwal', 'id_jadwal');
+    }
+
 }
