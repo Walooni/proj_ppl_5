@@ -201,9 +201,11 @@ class DosenController extends Controller
             'j.waktu_selesai',
         )
         ->get();
+
+        $sum_sks = $irs->sum('sks');
     
 
 
-        return view('doswal/informasi-irs-doswal', compact('dosen', 'tahun', 'result', 'irs'));
+        return view('doswal/informasi-irs-doswal', compact('dosen', 'tahun', 'result', 'irs', 'sum_sks'));
     }
 }

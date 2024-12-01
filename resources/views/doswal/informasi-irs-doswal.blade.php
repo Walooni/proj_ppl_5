@@ -123,9 +123,9 @@
                 </div>
             </section>
             
-            {{-- Dropdown filter semester --}}
             <div class="container flex justify-between">
                 {{-- {{ route('irs.filter.mhs') }} --}}
+                {{-- Dropdown filter semester --}}
                 <form method="GET" action="#" class="w-1/5 mb-3">
                     <label for="kategori-irs-mahasiswa" class="block mb-2 text-sm font-medium text-gray-900">Pilih Semester</label>
                     <select id="kategori-irs-mahasiswa" name="filter"
@@ -137,8 +137,9 @@
                     </select>
                 </form>
 
+                {{-- jumlah sks --}}
                 <div class="container flex flex-col justify-center w-auto">
-                    <p class="jml-sks block mb-2 text-sm font-medium text-gray-900 border-gray-300 border-2 rounded-lg bg-gray-200 p-3 round">Jumlah SKS : 24</p>
+                    <p class="jml-sks block mb-2 text-sm font-medium text-gray-900 border-gray-300 border-2 rounded-lg bg-gray-200 p-3 round">Jumlah SKS : {{$sum_sks}}</p>
                 </div>
             </div>
 
