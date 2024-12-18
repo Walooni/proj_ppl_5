@@ -7,15 +7,49 @@
   <title>SISKARA - Isian Rencana Semester (IRS)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Animasi untuk sidebar */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+   .flex-container {
+        display: flex;
+        min-height: 100vh;
+        transition: all 0.3s ease;
+    }
+
     .sidebar {
-      transition: transform 0.3s ease;
+        width: 250px;
+        transition: all 0.3s ease;
+        background-color: #0284c7;
+        color: white;
+        overflow: hidden;
+        
+    }
+    .sidebar-open {
+        width: 250px;
+        transition: width 0.75s ease; /* Lebih lambat saat dibuka */
     }
 
     .sidebar-closed {
-      transform: translateX(-100%);
+        width: 0;
+        padding: 0;
+        transform: translateX(-100%); 
+        transition: width 1s ease;
     }
-  </style>
+
+    .main-content {
+        flex: 1;
+        padding: 2rem;
+        background-color: #f3f4f6;
+        transition: margin 0.3s ease;
+        /* margin-left: 0; Default tanpa sidebar */
+    }
+
+    .toggle-btn {
+        cursor: pointer;
+    }
+</style>
 </head>
 <body class="bg-gray-100 font-sans">
   @php
@@ -38,7 +72,7 @@
   <header class="bg-gradient-to-r from-sky-500 to-blue-600 text-white p-4 flex justify-between items-center">
     <div class="flex items-center space-x-3">
         <!-- Tombol menu untuk membuka sidebar -->
-        <button onclick="toggleSidebar()" class="focus:outline-none">
+        <button onclick="toggleSidebar()" class="toogle-btn">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M4 6h16M4 12h16M4 18h16"></path>
@@ -53,9 +87,9 @@
     </nav>
   </header>
 
-  <div class="flex">
+  <div class="flex-container">
     <!-- Sidebar -->
-      <aside id="sidebar" class="sidebar w-1/5 bg-sky-500 h-screen p-4 text-white sidebar-closed fixed lg:static">
+      <aside id="sidebar" class="sidebar p-4 bg-sky-500 text-white">
         <!-- profil -->
         <div class="p-3 pb-1 bg-gray-300 rounded-3xl text-center mb-6">
             <div class="w-24 h-24 mx-auto bg-gray-400 rounded-full mb-3 bg-center bg-contain bg-no-repeat"
@@ -79,7 +113,7 @@
       </aside>
 
     <!-- Main Content -->
-    <main class="w-full lg:w-8/5 lg:ml-auto p-8">
+    <main class="main-content">
       <!-- <span class="toggle-btn text-2xl cursor-pointer mb-4 lg:hidden" onclick="toggleSidebar()">&#9776;</span> -->
       
       <h1 class="text-4xl font-bold mb-6">Isian Rencana Semester (IRS)</h1>
@@ -93,7 +127,7 @@
   </div>
 
   <!-- Modal for IRS Detail -->
-  <div class="modal fixed z-10 inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden" id="modal">
+  <div class="modal fixed z-10 inset-0 bg-gray-900 bg-opacity-50 items-center justify-center hidden" id="modal">
     <div class="modal-content bg-white p-6 rounded-lg max-w-7xl w-full relative">
       <button class="close-btn text-white bg-blue-500 px-3 py-1 rounded-full absolute top-4 right-4 hover:bg-blue-600" onclick="closeModal()">Tutup</button>
       <h2 class="text-xl font-bold mb-4" id="semester-title">Isian Rencana Semester</h2>
@@ -132,10 +166,22 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
   <script>
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('sidebar-closed');
-    }
-
+      function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+    
+        // Toggle class sidebar-open dan sidebar-closed
+        if (sidebar.classList.contains('sidebar-closed')) {
+          sidebar.classList.remove('sidebar-closed');
+          sidebar.classList.add('sidebar-open');
+        } else {
+          sidebar.classList.remove('sidebar-open');
+          sidebar.classList.add('sidebar-closed');
+        }
+    
+            // Main content menyesuaikan
+        mainContent.classList.toggle('full');
+      }
     // Fungsi untuk menampilkan modal dan memuat data IRS berdasarkan tahun ajaran
     function showModal(id_tahun, semester) {
       // Set judul modal sesuai dengan semester yang dipilih

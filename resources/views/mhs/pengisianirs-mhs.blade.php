@@ -7,36 +7,50 @@
     <title>SISKARA - Pengisian IRS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Animasi untuk sidebar */
-        .sidebar {
-            transition: transform 0.3s ease;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-
-        .sidebar-closed {
-            transform: translateX(-100%);
-        }
-
-        /* Menyesuaikan konten utama saat sidebar dibuka/tutup */
-        .main-content {
-            transition: margin-left 0.3s ease;
-        }
-
-        .main-content-shifted {
-            margin-left: 0;
-        }
-
-        /* Memastikan sidebar dan konten utama memenuhi tinggi layar */
-        .flex-container {
+       .flex-container {
+            display: flex;
             min-height: 100vh;
+            transition: all 0.3s ease;
         }
 
-        /* Mengatur lebar sidebar saat ditutup */
+        .sidebar {
+            width: 250px;
+            transition: all 0.3s ease;
+            background-color: #0284c7;
+            color: white;
+            overflow: hidden;
+            
+        }
+        .sidebar-open {
+            width: 250px;
+            transition: width 0.75s ease; /* Lebih lambat saat dibuka */
+        }
+
         .sidebar-closed {
             width: 0;
+            padding: 0;
+            transform: translateX(-100%); 
+            transition: width 1s ease;
         }
 
-        /* Modal Styling */
-        .modal {
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            background-color: #f3f4f6;
+            transition: margin 0.3s ease;
+            /* margin-left: 0; Default tanpa sidebar */
+        }
+
+        .toggle-btn {
+            cursor: pointer;
+        }
+         /* Modal Styling */
+         .modal {
             display: none;
             position: fixed;
             z-index: 50;
@@ -61,7 +75,6 @@
             background-color: #e2e8f0; /* Warna abu-abu terang */
             border-color: #0090FF;    /* Warna border gelap */
         }
-        /* Tambahan styling khusus jika diperlukan */
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
@@ -86,7 +99,7 @@
     <header class="bg-gradient-to-r from-sky-500 to-blue-600 text-white p-4 flex justify-between items-center">
         <div class="flex items-center space-x-3">
             <!-- Tombol menu untuk membuka sidebar -->
-            <button onclick="toggleSidebar()" class="focus:outline-none">
+            <button onclick="toggleSidebar()" class="toogle-btn">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor"
                      viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -100,9 +113,9 @@
         <div id="serverDateTimeHeader" class="text-right text-sm"></div>
     </header>
 
-    <div class="flex flex-container">
+    <div class="flex-container">
         <!-- Sidebar -->
-        <aside id="sidebar" class="sidebar w-1/5 bg-sky-500 h-screen p-4 text-white sidebar-closed fixed lg:static">
+        <aside id="sidebar" class="sidebar p-4 bg-sky-500 text-white">
             <!-- Profil -->
             <div class="p-3 pb-1 bg-gray-300 rounded-3xl text-center mb-6">
                 <div class="w-24 h-24 mx-auto bg-gray-400 rounded-full mb-3 bg-center bg-contain bg-no-repeat"
@@ -126,7 +139,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="w-full lg:w-8/5 lg:ml-auto p-8" id="mainContent">
+        <main class="main-content" id="mainContent">
             <!-- Header Halaman -->
             <h1 class="text-4xl font-bold mb-6">Pengisian IRS</h1>
 
@@ -230,6 +243,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
     <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+    
+            // Toggle class sidebar-open dan sidebar-closed
+            if (sidebar.classList.contains('sidebar-closed')) {
+                sidebar.classList.remove('sidebar-closed');
+                sidebar.classList.add('sidebar-open');
+            } else {
+                sidebar.classList.remove('sidebar-open');
+                sidebar.classList.add('sidebar-closed');
+            }
+    
+            // Main content menyesuaikan
+            mainContent.classList.toggle('full');
+        }
+        
         // Simulasi Tanggal Server (untuk keperluan demo)
         let serverDate = new Date(); // Gunakan tanggal saat ini
         // Untuk pengujian, Anda bisa mengatur tanggal server secara manual
