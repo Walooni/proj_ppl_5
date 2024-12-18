@@ -35,6 +35,7 @@ class IrsController extends Controller
         return redirect()->back()->with('success', 'IRS diizinkan untuk diubah');
     }
 
+    // filter rekap doswal
     public function filter(Request $request)
     {
         // Ambil filter dari request
@@ -82,6 +83,8 @@ class IrsController extends Controller
         return view('doswal/rekap-doswal', compact('result', 'dosen', 'tahun'));
     }
 
+
+
     public function filter_dashboard(Request $request)
     {
         // Ambil filter dari request
@@ -121,10 +124,10 @@ class IrsController extends Controller
         } elseif ($filter == 'sudah-disetujui') {
             $query->whereNotNull('i.nim')->whereNotNull('i.tanggal_disetujui');
         }
-
+        
         // Ambil hasil query
         $result = $query->get();
-
+        
         // Kirim data ke view
         return view('doswal/rekap-doswal', compact('result', 'dosen', 'filter', 'tahun'));
     }
@@ -136,12 +139,17 @@ class IrsController extends Controller
         $nidn = session('nidn');
         
         // Ambil data dosen
-        $dosen = dosen::all()->where('nidn', $nidn)->first();
-
+        $dosen = dosen::where('nidn', $nidn)->first();
+        
         // ambil nim dari request
         $nim = $request->query('nim');
-
+        
         // ambil data mahasiswa terpilih
+        
+        // Ambil filter dari request
+        $filter = intval($request->input('filter_semester', 1));
+        $arr_tahun = ['20241', '20232', '20231', '20222', '20221', '20212', '20211', '20202', '20201'];
+        
         $result = DB::table('mahasiswa as m')
         ->distinct()
         ->where('nidn','=',$nidn)
@@ -151,14 +159,17 @@ class IrsController extends Controller
             'm.nama',
             'm.semester',
             DB::raw("CASE
-                WHEN i.nim IS NULL THEN 'Belum IRS'
-                WHEN i.tanggal_disetujui IS NULL THEN 'Belum Disetujui'
+            WHEN i.nim IS NULL THEN 'Belum IRS'
+            WHEN i.tanggal_disetujui IS NULL THEN 'Belum Disetujui'
                 ELSE 'Sudah disetujui'
             END AS status")
-        )
+            )
         ->where('m.nim',$nim)
         ->first();
-        
+            
+        $semester = $result->semester;
+        // @dd($semester, $filter);
+
         // Query data berdasarkan filter
         $irs_filter = DB::table('irs as i')
         ->distinct()
@@ -166,6 +177,9 @@ class IrsController extends Controller
         ->join('jadwal as j', 'i.id_jadwal', '=', 'j.id_jadwal')
         ->join('ruang as r', 'r.id_ruang', '=', 'j.id_ruang')
         ->join('matakuliah as m', 'j.kode_mk', '=', 'm.kode_mk')
+        ->join('pengampu as p', 'm.kode_mk', '=', 'p.kode_mk') // Join ke tabel pengampu
+        ->join('dosen as d', 'p.nidn', '=', 'd.nidn') // Join ke tabel dosen
+        ->where('j.id_tahun', '=', $arr_tahun[$semester-$filter])
         ->select(
             'm.kode_mk',
             'm.nama_mk',
@@ -174,6 +188,7 @@ class IrsController extends Controller
             'r.id_ruang',
             'i.status',
             'j.id_tahun',
+            'd.nama as nama_dosen', // Ambil nama dosen pengampu
             DB::raw("
                 CASE j.hari
                     WHEN 1 THEN 'Senin'
@@ -191,27 +206,62 @@ class IrsController extends Controller
         );
            
         $irs_data = $irs_filter->get();
-        $semester = $result->semester;
 
-        // Ambil filter dari request
-        $filter = intval($request->input('filter_semester', 1));
+        // Ganti dengan kode berikut:
+        $courses = $irs_data->map(function($item) {
+            return [
+                'kode_mk' => $item->kode_mk,
+                'kelas' => $item->kelas,
+                'sks' => $item->sks
+            ];
+        })->unique(function($item) {
+            // Unik berdasarkan kombinasi kode_mk dan kelas
+            return $item['kode_mk'] . $item['kelas'];
+        });
 
-
-        $arr_tahun = ['20241', '20232', '20231', '20222', '20221', '20212', '20211', '20202', '20201'];
-
-        // dd($irs_filter->where('j.id_tahun', '=', '20221')->get());
+        $irs_grouped = $irs_data->groupBy(function ($item) {
+            return $item->kode_mk . '-' . $item->kelas; // Kelompokkan berdasarkan kode_mk dan kelas
+        })->map(function ($group) {
+            // Gabungkan jadwal ke dalam satu baris
+            $first = $group->first();
+            $jadwal = $group->map(function ($item) {
+                $waktu_mulai = substr($item->waktu_mulai, 0, 5); // Ambil HH:MM dari waktu_mulai
+                $waktu_selesai = substr($item->waktu_selesai, 0, 5); // Ambil HH:MM dari waktu_selesai
+                return "{$item->hari}, {$waktu_mulai}-{$waktu_selesai}";
+            })->unique()->implode('<br>'); // Hapus duplikat dengan unique()
         
-        // Terapkan filter
-        $irs = $irs_filter->where('j.id_tahun', '=', $arr_tahun[$semester-$filter])->get();
-
-
-        $sum_sks = $irs->sum('sks');
+            // Gabungkan nama dosen
+            $dosen = $group->map(function ($item) {
+                return $item->nama_dosen;
+            })->unique()->implode('<br>');
+        
+            return [
+                'kode_mk' => $first->kode_mk,
+                'nama_mk' => $first->nama_mk,
+                'sks' => $first->sks,
+                'kelas' => $first->kelas,
+                'ruang' => $first->id_ruang,
+                'status' => $first->status,
+                'jadwal' => $jadwal,
+                'dosen' => $dosen,
+            ];
+        });
+        
+        // Total SKS
+        
+        
+        // dd($irs_grouped);
+        
+        // dd($irs_grouped);
+        $sum_sks = $irs_grouped->sum('sks');
+        // $sum_sks = $irs->sum('sks');
         
       
         // Kirim data ke view
-        return view('doswal/informasi-irs-doswal', compact('result', 'dosen', 'irs', 'sum_sks'));
+        return view('doswal/informasi-irs-doswal', compact('result', 'dosen', 'irs_grouped', 'sum_sks'));
     }
 
+// ============================================================
 
     public function getIrsDetail(Request $request)
     {

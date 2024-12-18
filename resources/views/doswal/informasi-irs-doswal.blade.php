@@ -168,6 +168,7 @@
                             <th>Ruang</th>
                             <th>Status</th>
                             <th>Jadwal</th>
+                            <th>Dosen</th>
                         </tr>
                     </thead>
                     <tbody>
