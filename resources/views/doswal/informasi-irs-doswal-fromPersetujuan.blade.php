@@ -123,8 +123,12 @@
                 </div>
             </section>
             
-            <div class="container flex justify-between">
+            <div class="container flex justify-end gap-3">
                 {{-- jumlah sks --}}
+                <a href="{{ route('irs.download.pdf', ['nim' => $result->nim, 'filter_semester' => request('filter_semester') ?? $result->semester]) }}"
+                    class="bg-green-500 self-center text-white font-semibold py-3 px-4 rounded-lg hover:bg-green-700">
+                    Download PDF
+                </a>
                 <div class="container flex flex-col justify-center w-auto">
                     <p class="jml-sks block mb-2 text-sm font-medium text-gray-900 border-gray-300 border-2 rounded-lg bg-gray-200 p-3 round">Jumlah SKS : {{$sum_sks}}</p>
                 </div>

@@ -10,6 +10,7 @@ use App\Models\Jadwal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\tahunajaran;
 
 class IrsController extends Controller
 { 
@@ -260,6 +261,8 @@ class IrsController extends Controller
         // Kirim data ke view
         return view('doswal/informasi-irs-doswal', compact('result', 'dosen', 'irs_grouped', 'sum_sks'));
     }
+
+
 
 // ============================================================
 

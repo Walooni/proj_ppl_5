@@ -3,9 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IrsController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\DosenController;
+use App\Http\Controllers\MahasiswaController;
 
 // Semua User
 Route::get('/about', function () {
@@ -56,6 +57,8 @@ Route::get('/irs/filter', [IrsController::class, 'filter'])->name('irs.filter');
 Route::get('/irs/filter/semester', [IrsController::class, 'filter_semester'])->name('irs.filter.semester');
 
 Route::get('/irs/filter/dashboard', [IrsController::class, 'filter_dashboard'])->name('irs.filter.dashboard');
+
+Route::get('/download-pdf', [PDFController::class, 'generatePDF'])->name('irs.download.pdf');
 
 // Route::get('/dashboard-doswal/{nidn}', [DosenController::class, 'showAll'])->name('dashboard-doswal');
 

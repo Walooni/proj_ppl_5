@@ -95,6 +95,12 @@
                               d="M12.9 14.32A8 8 0 112 8a8 8 0 0110.9 6.32l5.4 5.38-1.5 1.5-5.4-5.38zM8 14a6 6 0 100-12 6 6 0 000 12z"
                               clip-rule="evenodd"></path>
                     </svg>
+
+                    <!-- Tombol download PDF -->
+                    {{-- <a href="{{ route('irs.pdf', ['nim' => $result->nim, 'semester' => $result->semester]) }}"
+                        class="bg-green-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700">
+                        Download PDF
+                    </a> --}}
                 </div>
             </div>
 
@@ -148,10 +154,16 @@
                 </form>
                 
                 
-
+                
                 {{-- jumlah sks --}}
-                <div class="container flex flex-col justify-center w-auto">
-                    <p class="jml-sks block mb-2 text-sm font-medium text-gray-900 border-gray-300 border-2 rounded-lg bg-gray-200 p-3 round">Jumlah SKS : {{$sum_sks}}</p>
+                <div class="container flex justify-center w-auto gap-3">
+                    <!-- Tombol download PDF -->
+                    <a href="{{ route('irs.download.pdf', ['nim' => $result->nim, 'filter_semester' => request('filter_semester') ?? $result->semester]) }}"
+                        class="bg-green-500 self-center text-white font-semibold py-3 px-4 rounded-lg hover:bg-green-700">
+                        Download PDF
+                    </a>
+                    
+                    <p class="jml-sks self-center block mb-2 text-sm font-medium text-gray-900 border-gray-300 border-2 rounded-lg bg-gray-200 p-3 round">Jumlah SKS : {{$sum_sks}}</p>
                 </div>
             </div>
 
