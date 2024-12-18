@@ -98,14 +98,6 @@
                 </div>
             </div>
 
-            {{-- <!-- Year Info -->
-            <div class="mb-3">
-                <div class="p-4 bg-gray-200 rounded-lg text-gray-700">
-                    <p class="text-lg">Tahun Ajaran</p>
-                    <p class="text-2xl font-semibold">{{ $tahun->tahun_ajaran }}</p>
-                </div>
-            </div> --}}
-
             {{-- code starts here --}}
 
             <!-- Informasi Mahasiswa -->
@@ -126,16 +118,36 @@
             <div class="container flex justify-between">
                 {{-- {{ route('irs.filter.mhs') }} --}}
                 {{-- Dropdown filter semester --}}
-                <form method="GET" action="#" class="w-1/5 mb-3">
-                    <label for="kategori-irs-mahasiswa" class="block mb-2 text-sm font-medium text-gray-900">Pilih Semester</label>
-                    <select id="kategori-irs-mahasiswa" name="filter"
+
+                {{-- <form method="GET" action="#" class="w-1/5 mb-3">
+                    <label for="kategori-semester" class="block mb-2 text-sm font-medium text-gray-900">Pilih Semester</label>
+                    <select id="kategori-semester" name="filter_semester"
                             onchange="this.form.submit()"
                             class="border text-sm rounded-lg block w-full p-2.5 bg-slate-600 border-gray-300 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500">
-                        @for ($i = 1; $i <= $result->semester; $i++)
+                        @for ($i = $result->semester; $i >= 1 ; $i--)
                         <option value="semester_{i}" {{ request('filter_semester') == '{i}' ? 'selected' : '' }}>{{$i}}</option>
                         @endfor
                     </select>
+                </form> --}}
+
+                {{-- uji coba --}}
+                <form method="GET" action="{{ route('irs.filter.semester') }}" class="w-1/5 mb-3">
+                    <label for="kategori-semester" class="block mb-2 text-sm font-medium text-gray-900">Pilih Semester</label>
+                    <select id="kategori-semester" name="filter_semester"
+                            onchange="this.form.submit()"
+                            class="border text-sm rounded-lg block w-full p-2.5 bg-slate-600 border-gray-300 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500">
+                        @for ($i = $result->semester; $i >= 1 ; $i--)
+                            <option value="{{ $i }}" {{ request('filter_semester') == "$i" ? 'selected' : '' }}>
+                                Semester {{ $i }}
+                            </option>
+                        @endfor
+                    </select>
+                    
+                    <!-- Input hidden untuk mengirimkan nim -->
+                    <input type="hidden" name="nim" value="{{ $result->nim }}">
                 </form>
+                
+                
 
                 {{-- jumlah sks --}}
                 <div class="container flex flex-col justify-center w-auto">
@@ -159,19 +171,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($irs as $row)
+                        @foreach ($irs_grouped as $row)
                         <tr>
-                            <td class="p-4">{{$loop->iteration}}</td>
-                            <td>{{$row->kode_mk}}</td>
-                            <td>{{$row->nama}}</td>
-                            <td>{{$row->sks}}</td>
-                            <td>{{$row->kelas}}</td>
-                            <td>{{$row->id_ruang}}</td>
-                            <td>{{$row->status}}</td>
-                            <td>{{$row->hari}}, {{$row->waktu_mulai}}-{{$row->waktu_selesai}}</td>
-                        </tr>
+                            <td class="p-4">{{ $loop->iteration }}</td>
+                            <td>{{ $row['kode_mk'] }}</td>
+                            <td>{{ $row['nama_mk'] }}</td>
+                            <td>{{ $row['sks'] }}</td>
+                            <td>{{ $row['kelas'] }}</td>
+                            <td>{{ $row['ruang'] }}</td>
+                            <td>{{ $row['status'] }}</td>
+                            <td>{!! $row['jadwal'] !!}</td> 
+                            <td>{!! $row['dosen'] !!}</td> 
                         @endforeach
                     </tbody>
+                    
                 </table>
             </section>
 

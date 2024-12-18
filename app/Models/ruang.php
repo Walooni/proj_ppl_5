@@ -1,29 +1,22 @@
 <?php
-
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class ruang extends Model
 {
     use HasFactory;
 
-    // Tabel yang digunakan oleh model
-    protected $table = 'ruang';
+    protected $table = 'ruang'; // Nama tabel
+    protected $primaryKey = 'id_ruang'; // Primary key tabel
+    public $incrementing = false; // Karena id_ruang bukan auto-increment
+    protected $keyType = 'string'; // Tipe primary key
+    public $timestamps = false; // Nonaktifkan timestamps
 
-    protected $fillable = [
-        'id_ruang',
-        'blok_gedung',
-        'lantai',
-        'kapasitas'
-    ];
-
-    // Relasi dengan model lain
+    protected $fillable = ['id_ruang', 'blok_gedung', 'lantai', 'kapasitas'];
     public function jadwal()
     {
-        return $this->hasMany(jadwal::class, 'id_ruang', 'id_ruang');
+        return $this->hasMany(Jadwal::class, 'id_ruang', 'id_ruang');
     }
-
-    
 }

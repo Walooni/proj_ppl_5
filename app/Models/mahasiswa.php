@@ -19,15 +19,22 @@ class mahasiswa extends Model
     {
         return $this->belongsTo(Dosen::class, 'nidn', 'nidn');
     }
-  
+
+    // Relasi ke Prodi
+    public function prodi()
+    {
+        return $this->belongsTo(programstudi::class, 'id_prodi', 'id_prodi');
+    }
+
+    // Relasi ke IRS
     public function irs()
     {
         return $this->hasMany(irs::class, 'nim', 'nim');
     }
-    
-    
-    // public function prodi()
-    // {
-    //     return $this->hasMany(irs::class, 'nim', 'nim');
-    // }
+
+    // Relasi ke Riwayat Status
+    public function riwayat_status()
+    {
+        return $this->hasMany(riwayatstatus::class, 'nim', 'nim');
+    }
 }

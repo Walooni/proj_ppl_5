@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\irs;
 use App\Models\dosen;
 use App\Models\jadwal;
-use App\Models\mahasiswa;
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use PhpParser\Node\Expr\Clone_;
 use Illuminate\Support\Facades\DB;
@@ -56,18 +56,6 @@ class DosenController extends Controller
         $nidn = session('nidn');
         // Ambil data dosen beserta jumlah mahasiswa perwalian
         $dosen = dosen::withCount('mahasiswa')->where('nidn', $nidn)->first();
-
-        // $mhs_filter = 
-        // DB::table('mahasiswa as m')
-        // ->distinct()
-        // ->where('nidn', '=', $nidn)
-        // ->leftJoin('irs as i', 'm.nim', '=', 'i.nim')
-        // ->select(
-        //     'm.nim',
-        //     'm.nama',
-        //     'm.semester'
-        // )
-        // ->whereNotNull('i.nim')->whereNull('i.tanggal_disetujui')->get();
 
         $mhs_filter = DB::table('mahasiswa as m')
         ->distinct()
@@ -144,6 +132,118 @@ class DosenController extends Controller
         // ambil nidn
         $nidn = session('nidn');
 
+        // Ambil data dosen
+        $dosen = dosen::all()->where('nidn', $nidn)->first();
+
+        // ambil data mahasiswa terpilih
+        $result = DB::table('mahasiswa as m')
+        ->distinct()
+        ->where('nidn','=',$nidn)
+        ->leftJoin('irs as i', 'm.nim', '=', 'i.nim')
+        ->select(
+            'm.nim',
+            'm.nama',
+            'm.semester',
+            DB::raw("CASE
+                WHEN i.nim IS NULL THEN 'Belum IRS'
+                WHEN i.tanggal_disetujui IS NULL THEN 'Belum Disetujui'
+                ELSE 'Sudah disetujui'
+            END AS status")
+        )
+        ->where('m.nim',$nim)
+        ->first();
+
+        // ambil data jadwal 
+        $irs = DB::table('irs as i')
+        ->distinct()
+        ->where('i.nim', '=', $nim)
+        ->join('jadwal as j', 'i.id_jadwal', '=', 'j.id_jadwal')
+        ->join('ruang as r', 'r.id_ruang', '=', 'j.id_ruang')
+        ->join('matakuliah as m', 'j.kode_mk', '=', 'm.kode_mk')
+        ->join('pengampu as p', 'm.kode_mk', '=', 'p.kode_mk') // Join ke tabel pengampu
+        ->join('dosen as d', 'p.nidn', '=', 'd.nidn') // Join ke tabel dosen
+        ->join('tahun_ajaran as ta', 'j.id_tahun', '=', 'ta.id_tahun')
+        ->select(
+            'm.kode_mk',
+            'm.nama_mk',
+            'm.sks',
+            'j.kelas',
+            'r.id_ruang',
+            'i.status',
+            'ta.tahun_ajaran',
+            'd.nama as nama_dosen', // Ambil nama dosen pengampu
+            DB::raw("
+                CASE j.hari
+                    WHEN 1 THEN 'Senin'
+                    WHEN 2 THEN 'Selasa'
+                    WHEN 3 THEN 'Rabu'
+                    WHEN 4 THEN 'Kamis'
+                    WHEN 5 THEN 'Jumat'
+                    WHEN 6 THEN 'Sabtu'
+                    WHEN 7 THEN 'Minggu'
+                    ELSE 'Tidak Diketahui'
+                END AS hari
+            "),
+            'j.waktu_mulai',
+            'j.waktu_selesai',
+        )
+        ->where('ta.id_tahun', '=', '20241')
+        ->get();
+
+
+
+        // Ganti dengan kode berikut:
+        $courses = $irs->map(function($item) {
+            return [
+                'kode_mk' => $item->kode_mk,
+                'kelas' => $item->kelas,
+                'sks' => $item->sks
+            ];
+        })->unique(function($item) {
+            // Unik berdasarkan kombinasi kode_mk dan kelas
+            return $item['kode_mk'] . $item['kelas'];
+        });
+
+        $irs_grouped = $irs->groupBy(function ($item) {
+            return $item->kode_mk . '-' . $item->kelas; // Kelompokkan berdasarkan kode_mk dan kelas
+        })->map(function ($group) {
+            // Gabungkan jadwal ke dalam satu baris
+            $first = $group->first();
+            $jadwal = $group->map(function ($item) {
+                $waktu_mulai = substr($item->waktu_mulai, 0, 5); // Ambil HH:MM dari waktu_mulai
+                $waktu_selesai = substr($item->waktu_selesai, 0, 5); // Ambil HH:MM dari waktu_selesai
+                return "{$item->hari}, {$waktu_mulai}-{$waktu_selesai}";
+            })->unique()->implode('<br>'); // Hapus duplikat dengan unique()
+        
+            // Gabungkan nama dosen
+            $dosen = $group->map(function ($item) {
+                return $item->nama_dosen;
+            })->unique()->implode('<br>');
+        
+            return [
+                'kode_mk' => $first->kode_mk,
+                'nama_mk' => $first->nama_mk,
+                'sks' => $first->sks,
+                'kelas' => $first->kelas,
+                'ruang' => $first->id_ruang,
+                'status' => $first->status,
+                'jadwal' => $jadwal,
+                'dosen' => $dosen,
+            ];
+        });
+        
+        // Total SKS
+        $sum_sks = $irs_grouped->sum('sks');
+        
+    
+        return view('doswal/informasi-irs-doswal', compact('dosen', 'result', 'irs_grouped', 'sum_sks'));
+
+    }
+
+    public function showInformasiLite ($nim){
+        // ambil nidn
+        $nidn = session('nidn');
+
         // ambil tahun ajaran
         $tahun = DB::table('tahun_ajaran')
         ->select('tahun_ajaran')
@@ -178,13 +278,18 @@ class DosenController extends Controller
         ->join('jadwal as j', 'i.id_jadwal', '=', 'j.id_jadwal')
         ->join('ruang as r', 'r.id_ruang', '=', 'j.id_ruang')
         ->join('matakuliah as m', 'j.kode_mk', '=', 'm.kode_mk')
+        ->join('pengampu as p', 'm.kode_mk', '=', 'p.kode_mk') // Join ke tabel pengampu
+        ->join('dosen as d', 'p.nidn', '=', 'd.nidn') // Join ke tabel dosen
+        ->join('tahun_ajaran as ta', 'j.id_tahun', '=', 'ta.id_tahun')
         ->select(
             'm.kode_mk',
-            'm.nama',
+            'm.nama_mk',
             'm.sks',
             'j.kelas',
             'r.id_ruang',
             'i.status',
+            'ta.tahun_ajaran',
+            'd.nama as nama_dosen', // Ambil nama dosen pengampu
             DB::raw("
                 CASE j.hari
                     WHEN 1 THEN 'Senin'
@@ -200,12 +305,54 @@ class DosenController extends Controller
             'j.waktu_mulai',
             'j.waktu_selesai',
         )
+        ->where('ta.id_tahun', '=', '20241')
         ->get();
 
-        $sum_sks = $irs->sum('sks');
+
+        // Ganti dengan kode berikut:
+        $courses = $irs->map(function($item) {
+            return [
+                'kode_mk' => $item->kode_mk,
+                'kelas' => $item->kelas,
+                'sks' => $item->sks
+            ];
+        })->unique(function($item) {
+            // Unik berdasarkan kombinasi kode_mk dan kelas
+            return $item['kode_mk'] . $item['kelas'];
+        });
+
+        $irs_grouped = $irs->groupBy(function ($item) {
+            return $item->kode_mk . '-' . $item->kelas; // Kelompokkan berdasarkan kode_mk dan kelas
+        })->map(function ($group) {
+            // Gabungkan jadwal ke dalam satu baris
+            $first = $group->first();
+            $jadwal = $group->map(function ($item) {
+                $waktu_mulai = substr($item->waktu_mulai, 0, 5); // Ambil HH:MM dari waktu_mulai
+                $waktu_selesai = substr($item->waktu_selesai, 0, 5); // Ambil HH:MM dari waktu_selesai
+                return "{$item->hari}, {$waktu_mulai}-{$waktu_selesai}";
+            })->unique()->implode('<br>'); // Hapus duplikat dengan unique()
+        
+            // Gabungkan nama dosen
+            $dosen = $group->map(function ($item) {
+                return $item->nama_dosen;
+            })->unique()->implode('<br>');
+        
+            return [
+                'kode_mk' => $first->kode_mk,
+                'nama_mk' => $first->nama_mk,
+                'sks' => $first->sks,
+                'kelas' => $first->kelas,
+                'ruang' => $first->id_ruang,
+                'status' => $first->status,
+                'jadwal' => $jadwal,
+                'dosen' => $dosen,
+            ];
+        });
+        
+        // Total SKS
+        $sum_sks = $irs_grouped->sum('sks');
+        
     
-
-
-        return view('doswal/informasi-irs-doswal', compact('dosen', 'tahun', 'result', 'irs', 'sum_sks'));
+        return view('doswal/informasi-irs-doswal-fromPersetujuan', compact('dosen', 'tahun', 'result', 'irs_grouped', 'sum_sks'));
     }
 }

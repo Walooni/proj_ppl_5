@@ -101,7 +101,8 @@
             <div class="mb-6">
                 <div class="p-4 bg-gray-200 rounded-lg text-gray-700">
                     <p class="text-lg">Tahun Ajaran</p>
-                    <p class="text-2xl font-semibold">{{$tahun->tahun_ajaran}}</p>
+                    {{-- <p class="text-2xl font-semibold">{{$tahun->tahun_ajaran}}</p> --}}
+                    <p class="text-2xl font-semibold">Semester Ganjil 2024/2025</p>
                 </div>
             </div>
 
@@ -160,7 +161,9 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 border-b border-gray-200 text-center text-sm">
-                                <a href="#" class="font-medium text-blue-600 dark:text-blue-700 hover:underline">Lihat IRS</a>
+                                <a href="{{ route('rekap-doswal.informasi-irs-fromPersetujuan', ['nim' => $mahasiswa->nim]) }}" class="font-medium text-blue-600 dark:text-blue-700 hover:underline">
+                                    Lihat IRS
+                                </a>
                             </td>
                         </tr>
                         @endforeach
