@@ -33,33 +33,27 @@ class DosenController extends Controller
         ->select(
             'm.nim',
             'm.nama',
-            'm.semester'
-            // DB::raw("CASE
-            // WHEN i.nim IS NULL THEN 'Belum IRS'
-            // WHEN i.tanggal_disetujui IS NULL THEN 'Belum Disetujui'
-            // WHEN i.tanggal_disetujui IS NOT NULL AND YEAR(i.tanggal_disetujui) = YEAR(CURDATE()) THEN 'Sudah disetujui'
-            // WHEN i.tanggal_disetujui IS NOT NULL AND YEAR(i.tanggal_disetujui) != YEAR(CURDATE()) THEN 'Belum Disetujui'
-            // ELSE 'Status Tidak Valid'
-            // END AS status"),
-            // DB::raw('MAX(i.tanggal_disetujui) as tanggal_disetujui')
+            'm.semester',
+            DB::raw("CASE
+            WHEN i.nim IS NULL THEN 'Belum IRS'
+            WHEN i.tanggal_disetujui IS NULL THEN 'Belum Disetujui'
+            WHEN i.tanggal_disetujui IS NOT NULL AND YEAR(i.tanggal_disetujui) = YEAR(CURDATE()) THEN 'Sudah disetujui'
+            WHEN i.tanggal_disetujui IS NOT NULL AND YEAR(i.tanggal_disetujui) != YEAR(CURDATE()) THEN 'Belum Disetujui'
+            ELSE 'Status Tidak Valid'
+            END AS status")
         )
-        ->groupBy('m.nim', 'm.nama', 'm.semester');
+        // ->groupBy('m.nim')
+        ;
+
+        // @dd((clone $query->having('status', '=', 'Sudah Disetujui')->get()));
        
         
         // @dd($query->whereNull('i.nim')->get()->count());
         $belum_irs = (clone $query)->whereNull('i.nim')->get()->count();
-        $belum_disetujui = (clone $query)->whereNotNull('i.nim')->whereNull('i.tanggal_disetujui')->get()->count();
-        $sudah_disetujui = (clone $query)->whereNotNull('i.nim')->whereNotNull('i.tanggal_disetujui')->get()->count();
-        // $belum_disetujui = (clone $query)
-        //     ->havingRaw("CASE WHEN i.nim IS NULL THEN 'Belum IRS' WHEN i.tanggal_disetujui IS NULL THEN 'Belum Disetujui' ELSE 'Status Tidak Valid' END = 'Belum Disetujui'")
-        //     ->get()
-        //     ->count();
-        // $sudah_disetujui = (clone $query)
-        //     ->havingRaw("CASE WHEN i.nim IS NULL THEN 'Belum IRS' WHEN i.tanggal_disetujui IS NULL THEN 'Belum Disetujui' ELSE 'Status Tidak Valid' END = 'Sudah disetujui'")
-        //     ->get()
-        //     ->count();
-        // $belum_disetujui = (clone $query)->where('status', '=', 'Belum Disetujui')->get()->count();
-        // $sudah_disetujui = (clone $query)->where('status', '=', 'Sudah Disetujui')->get()->count();
+        $belum_disetujui = (clone $query)->having('status', '=', 'Belum Disetujui')->get()->count();
+        
+        $sudah_disetujui = (clone $query)->having('status', '=', 'Sudah Disetujui')->get()->count();
+        // $sudah_disetujui = (clone $query)->whereNotNull('i.nim')->whereNotNull('i.tanggal_disetujui')->get()->count();
     
 
         if (!$dosen) {

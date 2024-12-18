@@ -72,12 +72,11 @@
 
     ];
 @endphp
-
     <!-- Header -->
     <header class="bg-gradient-to-r from-sky-500 to-blue-600 text-white p-4 flex justify-between items-center">
         <div class="flex items-center space-x-3">
             <!-- Tombol menu untuk membuka sidebar -->
-            <button onclick="toggleSidebar()" class="toogle-btn">
+            <button onclick="toggleSidebar()" class="focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 6h16M4 12h16M4 18h16"></path>
@@ -92,9 +91,9 @@
         </nav>
     </header>
 
-    <div class="flex-container">
+    <div class="flex">
         <!-- Sidebar -->
-        <aside id="sidebar" class="sidebar p-4 bg-sky-500 text-white">
+        <aside id="sidebar" class="sidebar w-1/5 bg-sky-500 h-screen p-4 text-white fixed lg:static">
             <!-- profil -->
             <div class="p-3 pb-1 bg-gray-300 rounded-3xl text-center mb-6">
                 <div class="w-24 h-24 mx-auto bg-gray-400 rounded-full mb-3 bg-center bg-contain bg-no-repeat"
@@ -116,7 +115,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content">
+        <main class="w-full lg:w-4/5 lg:ml-auto p-8 h-screen">
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-5xl font-bold">Persetujuan IRS</h1>
                 <div class="relative">
@@ -253,20 +252,7 @@
     <!-- Script untuk toggle sidebar -->
     <script>
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('main-content');
-    
-            // Toggle class sidebar-open dan sidebar-closed
-            if (sidebar.classList.contains('sidebar-closed')) {
-                sidebar.classList.remove('sidebar-closed');
-                sidebar.classList.add('sidebar-open');
-            } else {
-                sidebar.classList.remove('sidebar-open');
-                sidebar.classList.add('sidebar-closed');
-            }
-    
-            // Main content menyesuaikan
-            mainContent.classList.toggle('full');
+            document.getElementById('sidebar').classList.toggle('sidebar-closed');
         }
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -280,7 +266,7 @@
         });
 
         // Time Config
-        let serverDate = new Date('2025-01-30')
+        let serverDate = new Date('2024-12-30')
 
         let fillingStartDate = new Date('2024-11-01')
         let fillingEndDate = new Date('2024-12-17')
