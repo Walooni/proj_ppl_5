@@ -16,7 +16,7 @@ class AccountSeeder extends Seeder
                 'password' => Hash::make('password123'),
                 'role' => false,
                 // role = false, buat mahasiswa
-                'related_id' => '24060121120002',
+                'related_id' => '24060122130051',
             ],
             [
                 'email' => 'pembimbing@example.com',
