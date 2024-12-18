@@ -106,6 +106,14 @@
                 </div>
             </div>
 
+            <!-- Info Waktu -->
+            <div class="mb-6">
+                <div class="flex gap-3 p-2 w-max text-center bg-gray-200 rounded-lg text-gray-700">
+                    <p class="text-lg">Status Pengisian IRS: </p>
+                    <p id="time-status" class="text-lg font-semibold"></p>
+                </div>
+            </div>
+
             <!-- Tabel Persetujuan -->
             <div class="container overflow-y-auto h-2/3">
                 <table class="table-auto min-w-full bg-white border border-gray-200">
@@ -143,7 +151,7 @@
                             <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">{{ $mahasiswa->nim }}</td>
                             </td>
                             <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">{{ $mahasiswa->semester }}</td>
-                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">
+                            {{-- <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">
                                 <div class="inline-flex">
                                     <form action="{{ route('irs.approve', $mahasiswa->nim) }}" method="POST">
                                         @csrf
@@ -159,7 +167,26 @@
                                         Izinkan Ubah IRS</button>
                                     </form>
                                 </div>
+                            </td> --}}
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-600 text-center">
+                                <div class="inline-flex">
+                                    <form action="{{ route('irs.approve', $mahasiswa->nim) }}" method="POST" id="approve-form-{{$mahasiswa->nim}}">
+                                        @csrf
+                                        <button type="submit" id="approve-btn-{{$mahasiswa->nim}}"
+                                            class="text-white bg-sky-500 hover:bg-sky-700 active:bg-sky-400 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                            Setuju
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('irs.izin', $mahasiswa->nim) }}" method="POST" id="izin-form-{{$mahasiswa->nim}}">
+                                        @csrf
+                                        <button type="submit" id="izin-btn-{{$mahasiswa->nim}}"
+                                            class="text-white bg-amber-400 hover:bg-yellow-600 active:bg-yellow-400 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                            Izinkan Ubah IRS
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
+
                             <td class="px-6 py-4 border-b border-gray-200 text-center text-sm">
                                 <a href="{{ route('rekap-doswal.informasi-irs-fromPersetujuan', ['nim' => $mahasiswa->nim]) }}" class="font-medium text-blue-600 dark:text-blue-700 hover:underline">
                                     Lihat IRS
@@ -204,6 +231,56 @@
             }, 3000); // Hilangkan pesan setelah 3 detik
         }
         });
+
+        // Time Config
+        let serverDate = new Date('2025-01-30')
+
+        let fillingStartDate = new Date('2024-11-01')
+        let fillingEndDate = new Date('2024-12-17')
+
+        let twoWeeksAfterEnd = new Date(fillingEndDate.getTime() + (14*24*60*60*1000))
+        let fourWeeksAfterEnd = new Date(fillingEndDate.getTime() + (28*24*60*60*1000))
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // const serverDate = new Date();
+            // const fillingEndDate = new Date('2024-12-17'); // Tanggal terakhir pengisian IRS
+            // const fourWeeksAfterEnd = new Date(fillingEndDate.getTime() + (28 * 24 * 60 * 60 * 1000)); // 4 minggu setelah tanggal terakhir
+
+            // Menghitung selisih waktu dalam milidetik
+            const timeDiff = fillingEndDate - serverDate; // Hasil dalam milidetik
+            const diffDays = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); // Menghitung hari tersisa atau terlewat
+
+            // Memperbarui status di UI
+            const timeStatus = document.getElementById('time-status');
+            if (diffDays > 0) {
+                timeStatus.textContent = `${diffDays} hari tersisa`;
+            } else if (diffDays < 0) {
+                timeStatus.textContent = `${Math.abs(diffDays)} hari terlewat`;
+            } else {
+                timeStatus.textContent = 'Hari ini adalah hari terakhir pengisian IRS';
+            }
+
+            // Jika lebih dari 4 minggu setelah batas tanggal, disable tombol
+            if (serverDate > fourWeeksAfterEnd) {
+                const approveBtns = document.querySelectorAll('[id^="approve-btn-"]');
+                const izinBtns = document.querySelectorAll('[id^="izin-btn-"]');
+
+                approveBtns.forEach(button => {
+                    button.disabled = true;  // Disable tombol Setuju
+                    button.classList.add('opacity-50');  // Ubah warnanya menjadi pudar
+                    button.classList.remove('hover:bg-sky-700');
+                });
+
+                izinBtns.forEach(button => {
+                    button.disabled = true;  // Disable tombol Izinkan Ubah IRS
+                    button.classList.add('opacity-50');  // Ubah warnanya menjadi pudar
+                    button.classList.remove('hover:bg-yellow-600');
+                });
+
+                timeStatus.textContent = 'Periode telah berakhir silahkan kembali lagi di semester berikutnya';
+            }
+        });
+
     </script>
 
 </body>
