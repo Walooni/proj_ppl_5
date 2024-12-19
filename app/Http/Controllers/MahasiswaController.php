@@ -221,8 +221,29 @@ class MahasiswaController extends Controller
             ->get()
             ->keyBy('id_jadwal');
         
+        // Ambil tanggal_disetujui dari IRS mahasiswa untuk semester saat ini
+        // Ambil tanggal_disetujui berdasarkan tahun ajaran
+        $irs = DB::table('irs')
+        ->where('nim', $nim)
+        ->where('id_jadwal', 'like', '20241%')
+        ->first();
+
+        $id_tahun = $ta_skrg->id_tahun; // Tahun ajaran saat ini
+
+        $irsTerdaftar = DB::table('irs')
+            ->join('jadwal', 'irs.id_jadwal', '=', 'jadwal.id_jadwal')
+            ->join('matakuliah', 'jadwal.kode_mk', '=', 'matakuliah.kode_mk')
+            ->select('irs.id_jadwal', 'jadwal.hari', 'jadwal.waktu_mulai', 'jadwal.waktu_selesai', 
+                    'jadwal.kode_mk', 'jadwal.kelas', 'matakuliah.nama_mk', 'matakuliah.sks', 
+                    'jadwal.id_ruang')
+            ->where('irs.nim', $nim)
+            ->where('jadwal.id_tahun', $id_tahun)
+            ->get();
+
+                    // dd($irsTerdaftar);
+
 
         // Kirim data ke view
-        return view('mhs/pengisianirs-mhs', compact('mhs', 'ta_skrg', 'status_lalu', 'ipslalu', 'maxsks', 'listmk', 'jadwalmk'));        
+        return view('mhs/pengisianirs-mhs', compact('mhs', 'ta_skrg', 'status_lalu', 'ipslalu', 'maxsks', 'listmk', 'jadwalmk', 'irs','irsTerdaftar'));        
     }
 }
