@@ -62,9 +62,11 @@ class IrsController extends Controller
                 'm.nama',
                 'm.semester',
                 DB::raw("CASE
-                    WHEN i.nim IS NULL THEN 'Belum IRS'
-                    WHEN i.tanggal_disetujui IS NULL THEN 'Belum Disetujui'
-                    ELSE 'Sudah Disetujui'
+                WHEN i.nim IS NULL THEN 'Belum IRS'
+                WHEN i.tanggal_disetujui IS NULL THEN 'Belum Disetujui'
+                WHEN i.tanggal_disetujui IS NOT NULL AND YEAR(i.tanggal_disetujui) != YEAR(CURDATE()) THEN 'Belum Disetujui'
+                WHEN i.tanggal_disetujui IS NOT NULL AND YEAR(i.tanggal_disetujui) = YEAR(CURDATE()) THEN 'Sudah disetujui'
+                ELSE 'Status Tidak Valid'
                 END AS status")
             );
 
@@ -72,9 +74,11 @@ class IrsController extends Controller
         if ($filter == 'belum-irs') {
             $query->whereNull('i.nim');
         } elseif ($filter == 'belum-disetujui') {
-            $query->whereNotNull('i.nim')->whereNull('i.tanggal_disetujui');
+            $query->having('status', '=', 'Belum Disetujui');
+            // $query->whereNotNull('i.nim')->whereNull('i.tanggal_disetujui');
         } elseif ($filter == 'sudah-disetujui') {
-            $query->whereNotNull('i.nim')->whereNotNull('i.tanggal_disetujui');
+            $query->having('status', '=', 'Sudah Disetujui');
+            // $query->whereNotNull('i.nim')->whereNotNull('i.tanggal_disetujui');
         }
 
         // Ambil hasil query
@@ -111,9 +115,11 @@ class IrsController extends Controller
                 'm.nama',
                 'm.semester',
                 DB::raw("CASE
-                    WHEN i.nim IS NULL THEN 'Belum IRS'
-                    WHEN i.tanggal_disetujui IS NULL THEN 'Belum Disetujui'
-                    ELSE 'Sudah Disetujui'
+                WHEN i.nim IS NULL THEN 'Belum IRS'
+                WHEN i.tanggal_disetujui IS NULL THEN 'Belum Disetujui'
+                WHEN i.tanggal_disetujui IS NOT NULL AND YEAR(i.tanggal_disetujui) = YEAR(CURDATE()) THEN 'Sudah disetujui'
+                WHEN i.tanggal_disetujui IS NOT NULL AND YEAR(i.tanggal_disetujui) != YEAR(CURDATE()) THEN 'Belum Disetujui'
+                ELSE 'Status Tidak Valid'
                 END AS status")
             );
 
@@ -162,7 +168,9 @@ class IrsController extends Controller
             DB::raw("CASE
             WHEN i.nim IS NULL THEN 'Belum IRS'
             WHEN i.tanggal_disetujui IS NULL THEN 'Belum Disetujui'
-                ELSE 'Sudah disetujui'
+            WHEN i.tanggal_disetujui IS NOT NULL AND YEAR(i.tanggal_disetujui) = YEAR(CURDATE()) THEN 'Sudah disetujui'
+            WHEN i.tanggal_disetujui IS NOT NULL AND YEAR(i.tanggal_disetujui) != YEAR(CURDATE()) THEN 'Belum Disetujui'
+            ELSE 'Status Tidak Valid'
             END AS status")
             )
         ->where('m.nim',$nim)
