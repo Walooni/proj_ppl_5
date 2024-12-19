@@ -120,40 +120,43 @@
       @foreach ($filtered_tahun_ajaran as $ta)
       <div class="p-6 bg-gray-200 rounded-lg flex justify-between items-center mb-6">
         <p class="text-xl">Semester {{ $ta['semester'] }} <br> {{ $ta['tahun_ajaran'] }}</p>
-        <button onclick="showModal({{ $ta['id_tahun'] }}, {{ $ta['semester'] }})" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Lihat Detail IRS</button>
+        <button onclick="showModal('{{ $ta['id_tahun'] }}', '{{ $ta['semester'] }}', '{{ $ta['tahun_ajaran'] }}')" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Lihat Detail IRS</button>
       </div>
       @endforeach
     </main>
-  </div>
+    <!-- Modal for IRS Detail -->
 
-  <!-- Modal for IRS Detail -->
-  <div class="modal fixed z-10 inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden" id="modal">
-    <div class="modal-content bg-white p-6 rounded-lg max-w-7xl w-full relative">
-      <button class="close-btn text-white bg-blue-500 px-3 py-1 rounded-full absolute top-4 right-4 hover:bg-blue-600" onclick="closeModal()">Tutup</button>
-      <h2 class="text-xl font-bold mb-4" id="semester-title">Isian Rencana Semester</h2>
-      <p class="text-lg font-semibold mb-2" id="status-persetujuan">Status Persetujuan:</p>
-      <table class="w-full border border-gray-300" id="irs-table">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="p-1 border">No</th>
-            <th class="p-1 border">Kode</th>
-            <th class="p-1 border">Mata Kuliah</th>
-            <th class="p-1 border">Waktu</th>
-            <th class="p-1 border">Kelas</th>
-            <th class="p-1 border">SKS</th>
-            <th class="p-1 border">Ruang</th>
-            <th class="p-1 border">Status</th>
-            <th class="p-1 border">Nama Dosen</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Isi Tabel IRS -->
-        </tbody>
-      </table>
-      <button class="print-btn text-white bg-blue-500 px-3 py-1 rounded-full absolute bottom-4 right-4 hover:bg-blue-600" id="cetak-irs" onclick="printPDF({{ $mhs }})">Cetak IRS</button>
-      <p class="text-lg px-3 py-1" id="total-sks">Total SKS: </p>
+    <div class=" flex modal fixed z-10 inset-0 bg-gray-900 bg-opacity-50 items-center justify-center hidden" id="modal" >
+      <div class="modal-content bg-white p-6 rounded-lg max-w-7xl w-full relative items-center">
+        <button class="close-btn text-white bg-blue-500 px-3 py-1 rounded-full absolute top-4 right-4 hover:bg-blue-600" onclick="closeModal()">Tutup</button>
+        <h2 class="text-xl font-bold mb-4" id="semester-title">Isian Rencana Semester</h2>
+        <p class="text-lg font-semibold mb-2" id="status-persetujuan">Status Persetujuan:</p>
+        <table class="w-full border border-gray-300" id="irs-table">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-1 border">No</th>
+              <th class="p-1 border">Kode</th>
+              <th class="p-1 border">Mata Kuliah</th>
+              <th class="p-1 border">Waktu</th>
+              <th class="p-1 border">Kelas</th>
+              <th class="p-1 border">SKS</th>
+              <th class="p-1 border">Ruang</th>
+              <th class="p-1 border">Status</th>
+              <th class="p-1 border">Nama Dosen</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Isi Tabel IRS -->
+          </tbody>
+        </table>
+        <button class="print-btn text-white bg-blue-500 px-3 py-1 rounded-full absolute bottom-4 right-4 hover:bg-blue-600" id="cetak-irs" onclick="handlePrintIRS({{ json_encode($mhs) }})"> Cetak IRS </button>
+
+        <p class="text-lg px-3 py-1" id="total-sks">Total SKS: </p>
+      </div>
     </div>
-  </div>
+</div>
+
+  
 
   <!-- Footer -->
   <footer class="bg-gradient-to-r from-sky-500 to-blue-600 text-white text-center p-4 absolute w-full">
@@ -182,103 +185,110 @@
             // Main content menyesuaikan
         mainContent.classList.toggle('full');
       }
-    // Fungsi untuk menampilkan modal dan memuat data IRS berdasarkan tahun ajaran
-    function showModal(id_tahun, semester) {
-      // Set judul modal sesuai dengan semester yang dipilih
-      $('#semester-title').text('Isian Rencana Studi Semester ' + semester);
+    function showModal(id_tahun, semester,tahun_ajaran) {
+    // Set judul modal sesuai dengan semester yang dipilih
+        $('#semester-title').text('Isian Rencana Studi Semester ' + semester);
 
-      // Kirim request AJAX untuk mendapatkan detail IRS
-      $.ajax({
-        url: "{{ route('getIrsDetail') }}",  // URL untuk mendapatkan data IRS
-        type: "GET",
-        data: {
-          id_tahun: id_tahun  // Mengirimkan id_tahun untuk filter data IRS
-        },
-        success: function(response) {
-          var irsHtml = '';
-          var totalSks = 0;
-          
-          // Default status persetujuan
-          var persetujuanStatus = 'Belum Disetujui Dosen Wali'; // Default
-          
-          // Periksa jika ada data IRS dan nilai tanggal_disetujui
-          if (response.irs.length > 0) {
-            const tanggalDisetujui = response.irs[0].tanggal_disetujui; // Ambil dari record pertama
-            if (tanggalDisetujui !== null && tanggalDisetujui !== undefined && tanggalDisetujui !== "") {
-              persetujuanStatus = 'Telah Disetujui Dosen Wali';
+        // Simpan `id_tahun` dan `semester` di modal sebagai atribut data
+        $('#modal').data('id_tahun', id_tahun);
+        $('#modal').data('semester', semester);
+        $('#modal').data('tahun_ajaran', tahun_ajaran);
+        // Kirim request AJAX untuk mendapatkan detail IRS
+        $.ajax({
+            url: "{{ route('getIrsDetail') }}",  // URL untuk mendapatkan data IRS
+            type: "GET",
+            data: {
+                id_tahun: id_tahun  // Mengirimkan id_tahun untuk filter data IRS
+            },
+            success: function(response) {
+                var irsHtml = '';
+                var totalSks = 0;
+                
+                // Default status persetujuan
+                var persetujuanStatus = 'Belum Disetujui Dosen Wali'; // Default
+                
+                // Periksa jika ada data IRS dan nilai tanggal_disetujui
+                if (response.irs.length > 0) {
+                    const tanggalDisetujui = response.irs[0].tanggal_disetujui; // Ambil dari record pertama
+                    if (tanggalDisetujui) {
+                        persetujuanStatus = 'Telah Disetujui Dosen Wali';
+                    }
+                }
+
+                // Tampilkan status persetujuan
+                $('#status-persetujuan').text('Status Persetujuan: ' + persetujuanStatus);
+
+                // Cek apakah response.irs kosong
+                if (response.irs.length === 0) {
+                    irsHtml = `
+                        <tr>
+                            <td colspan="9" class="p-4 text-center text-red-500">Mahasiswa belum menyimpan IRS</td>
+                        </tr>
+                    `;
+                    totalSks = 0;
+                    $('#cetak-irs').addClass('hidden');
+                } else {
+                    $('#cetak-irs').removeClass('hidden');
+                    $.each(response.irs, function(index, irs) {
+                        var dosenList = '';
+                        $.each(irs.dosen, function(i, dosen) {
+                            dosenList += dosen + "<br>";
+                        });
+
+                        irsHtml += `
+                            <tr>
+                                <td class="p-1 border text-center">${index + 1}</td>
+                                <td class="p-1 border text-left">${irs.kode_mk}</td>
+                                <td class="p-1 border text-left">${irs.nama_mk}</td>
+                                <td class="p-1 border text-left">${irs.hari_waktu}</td>
+                                <td class="p-1 border text-center">${irs.kelas}</td>
+                                <td class="p-1 border text-center">${irs.sks}</td>
+                                <td class="p-1 border text-left">${irs.id_ruang}</td>
+                                <td class="p-1 border text-left">${irs.status}</td>
+                                <td class="p-1 border text-left">${dosenList}</td>
+                            </tr>
+                        `;
+                        totalSks += parseInt(irs.sks);
+                    });
+                }
+
+                // Memasukkan data IRS ke dalam tabel
+                $('#irs-table tbody').html(irsHtml);
+
+                // Menampilkan total SKS
+                $('#total-sks').text('Total SKS: ' + totalSks);
+
+                // Menampilkan modal
+                $('#modal').removeClass('hidden');
             }
-          }
-
-          // Tampilkan status persetujuan
-          $('#status-persetujuan').text('Status Persetujuan: ' + persetujuanStatus);
-
-          // Cek apakah response.irs kosong
-          if (response.irs.length === 0) {
-            irsHtml = `
-              <tr>
-                <td colspan="9" class="p-4 text-center text-red-500">Mahasiswa belum menyimpan IRS</td>
-              </tr>
-            `;
-            totalSks = 0;
-            $('#cetak-irs').addClass('hidden');
-          } else {
-            $.each(response.irs, function(index, irs) {
-              // Menampilkan daftar dosen dalam format yang sesuai
-              var dosenList = '';
-              $.each(irs.dosen, function(i, dosen) {
-                dosenList += dosen + "<br>";
-              });
-
-              irsHtml += `
-                <tr>
-                  <td class="p-1 border text-center">${index + 1}</td>
-                  <td class="p-1 border text-left">${irs.kode_mk}</td>
-                  <td class="p-1 border text-left">${irs.nama_mk}</td>
-                  <td class="p-1 border text-left">${irs.hari_waktu}</td>
-                  <td class="p-1 border text-center">${irs.kelas}</td>
-                  <td class="p-1 border text-center">${irs.sks}</td>
-                  <td class="p-1 border text-left">${irs.id_ruang}</td>
-                  <td class="p-1 border text-left">${irs.status}</td>                    
-                  <td class="p-1 border text-left">${dosenList}</td>
-                </tr>
-              `;
-              totalSks += parseInt(irs.sks);
-            });
-          }
-
-          // Memasukkan data IRS ke dalam tabel
-          $('#irs-table tbody').html(irsHtml);
-
-          // Menampilkan total SKS
-          $('#total-sks').text('Total SKS: ' + totalSks);
-
-          // Menampilkan modal
-          $('#modal').removeClass('hidden');
-        }
-      });
+        });
     }
 
     function closeModal() {
       document.getElementById('modal').classList.add('hidden');
     }
+    function handlePrintIRS(mhs) {
+      const tahun_ajaran = $('#modal').data('tahun_ajaran');
+      const semester = $('#modal').data('semester');
+      const ta = { tahun_ajaran, semester };
+      printPDF(mhs, ta);
+    }
 
-    function printPDF(mhs) {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
 
-      // Menggunakan font Times New Roman
-      // doc.addFileToVFS('times-new-roman.ttf', TimesNewRoman);
-      // doc.addFont('times-new-roman.ttf', 'TimesNewRoman', 'normal');
-      doc.setFont('TimesNewRoman');
+   
+    function printPDF(mhs, ta) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
 
-      // Header untuk institusi dan judul dokumen
-      doc.setFontSize(14);
-      doc.text("KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET DAN TEKNOLOGI", 105, 10, { align: "center" });
-      doc.text(`${mhs.nama_fakultas}`, 105, 16, { align: "center" });
-      doc.text("UNIVERSITAS DIPONEGORO", 105, 22, { align: "center" });
-      doc.setFontSize(12);
-      doc.text("ISIAN RENCANA STUDI", 105, 30, { align: "center" });
-      doc.text("Semester Ganjil TA 2024/2025", 105, 36, { align: "center" });
+        // Header
+        doc.setFont('times', 'normal');
+        doc.setFontSize(14);
+        doc.text("KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET DAN TEKNOLOGI", 105, 10, { align: "center" });
+        doc.text(`${mhs.nama_fakultas}`, 105, 16, { align: "center" });
+        doc.text("UNIVERSITAS DIPONEGORO", 105, 22, { align: "center" });
+        doc.setFontSize(12);
+        doc.text("ISIAN RENCANA STUDI", 105, 30, { align: "center" });
+        doc.text(`${ta.tahun_ajaran}`, 105, 36, { align: "center" });
 
       // Data Mahasiswa
       doc.setFontSize(12);
@@ -288,15 +298,12 @@
       doc.text(`Dosen Wali : ${mhs.nama_dosen}`, 20, 64);
 
       // Ambil data IRS dari tabel modal
-      var irsData = [];
-      $('#irs-table tbody tr').each(function() {
-        var row = [];
-        $(this).find('td').each(function(index) {
-          if (index === 3) {
-            // Kolom "Waktu", gabungkan nilai yang dipisahkan dengan baris baru
-            row.push($(this).html().replace(/<br>/g, '\n').trim());
-          } else if (index === 8) {
-            // Kolom "Nama Dosen", gabungkan nilai yang dipisahkan dengan baris baru
+      const irsData = [];
+      $('#irs-table tbody tr').each(function () {
+        const row = [];
+        $(this).find('td').each(function (index) {
+          if (index === 3 || index === 8) {
+            // Kolom "Waktu" dan "Nama Dosen"
             row.push($(this).html().replace(/<br>/g, '\n').trim());
           } else {
             row.push($(this).text().trim());
@@ -310,7 +317,7 @@
         startY: 70,
         head: [['No', 'Kode', 'Mata Kuliah', 'Waktu', 'Kelas', 'SKS', 'Ruang', 'Status', 'Nama Dosen']],
         body: irsData,
-        styles: { fontSize: 10, font: 'TimesNewRoman', lineColor: [0, 0, 0], lineWidth: 0.1 },
+        styles: { fontSize: 10, font: 'times', lineColor: [0, 0, 0], lineWidth: 0.1 },
         headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
         bodyStyles: { textColor: [0, 0, 0] },
         theme: 'grid',
@@ -321,7 +328,7 @@
       const formattedDate = today.toLocaleDateString('id-ID', {
         day: '2-digit',
         month: 'long',
-        year: 'numeric'
+        year: 'numeric',
       });
 
       doc.setFontSize(12);
@@ -336,8 +343,11 @@
       doc.text(`NIM. ${mhs.nim}`, 140, doc.lastAutoTable.finalY + 40);
 
       // Simpan PDF
-      doc.save("Isian Rencana Studi.pdf");
+      $sms = {{ $ta['semester'] }};
+      const fileName = `IRS_${mhs.nama}_Semester: ${ta.semester}.pdf`;
+      doc.save(fileName);
     }
+
   </script>
 
 </body>
