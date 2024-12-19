@@ -127,7 +127,7 @@
   </div>
 
   <!-- Modal for IRS Detail -->
-  <div class="modal fixed z-10 inset-0 bg-gray-900 bg-opacity-50 items-center justify-center hidden" id="modal">
+  <div class="modal fixed z-10 inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden" id="modal">
     <div class="modal-content bg-white p-6 rounded-lg max-w-7xl w-full relative">
       <button class="close-btn text-white bg-blue-500 px-3 py-1 rounded-full absolute top-4 right-4 hover:bg-blue-600" onclick="closeModal()">Tutup</button>
       <h2 class="text-xl font-bold mb-4" id="semester-title">Isian Rencana Semester</h2>

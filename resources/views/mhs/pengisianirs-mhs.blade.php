@@ -178,6 +178,9 @@
                         <div id="courseList" class="grid gap-4 overflow-y-auto bg-white p-4 rounded-lg" style="max-height: 420px;">
                             <!-- Mata kuliah akan diisi melalui JavaScript -->
                         </div>
+                        <div id="courseListLockedMessage" style="display: none;" class="text-center bg-gray-200 p-4 rounded-lg">
+                            <p class="text-gray-600">Daftar mata kuliah telah dikunci. Anda hanya dapat membatalkan mata kuliah.</p>
+                        </div>
                     </div>
 
                     <!-- Tabel Jadwal -->
@@ -198,22 +201,30 @@
                 </div>
             </div>
 
+            <!-- Tombol Izin Perbaikan IRS saat periode -->
+            <div id="requestIRS" style="display: none;" class="text-center">
+                <p class="mb-4">IRS sudah disetujui. Anda dapat meminta izin perbaikan IRS kepada Dosen Wali.</p>
+                {{-- <button onclick="requestFix()" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600">Minta Izin Perbaikan IRS</button> --}}
+            </div>
+
             <!-- Tombol Izin Perbaikan IRS -->
             <div id="requestFixButton" style="display: none;" class="text-center">
                 <p class="mb-4">Masa pengisian IRS telah berakhir. Anda dapat meminta izin perbaikan IRS kepada Dosen Wali.</p>
-                <button onclick="requestFix()" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600">Minta Izin Perbaikan IRS</button>
+                {{-- <button onclick="requestFix()" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600">Minta Izin Perbaikan IRS</button> --}}
             </div>
 
             <!-- Tombol Izin Pembatalan IRS -->
             <div id="requestCancellationButton" style="display: none;" class="text-center">
                 <p class="mb-4">Masa perbaikan IRS telah berakhir. Anda dapat meminta izin pembatalan IRS kepada Dosen Wali.</p>
-                <button onclick="requestCancellation()" class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600">Minta Izin Pembatalan IRS</button>
+                {{-- <button onclick="requestCancellation()" class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600">Minta Izin Pembatalan IRS</button> --}}
             </div>
 
             <!-- Pesan Masa Berakhir -->
             <div id="periodOverMessage" style="display: none;" class="text-center">
                 <p class="mb-4 text-red-600">Masa pengisian dan perbaikan IRS telah berakhir.</p>
             </div>
+
+            
         </main>
     </div>
 
@@ -265,9 +276,12 @@
         // Untuk pengujian, Anda bisa mengatur tanggal server secara manual
         // Contoh: let serverDate = new Date('2023-11-10');
 
+        let tanggalDisetujui = "{{ $irs->tanggal_disetujui ?? null }}";
+        console.log("Tanggal disetujui dari Blade: {{ $irs->tanggal_disetujui ?? 'null' }}");
+
         // Tanggal Mulai dan Berakhir Pengisian IRS
         let fillingStartDate = new Date('2024-11-01');
-        let fillingEndDate = new Date('2024-12-31');
+        let fillingEndDate = new Date('2024-12-25');
 
         // Tanggal untuk periode perbaikan dan pembatalan
         let twoWeeksAfterEnd = new Date(fillingEndDate.getTime() + (14 * 24 * 60 * 60 * 1000));
@@ -291,21 +305,47 @@
         function checkIRSPeriod() {
             if (serverDate <= fillingEndDate) {
                 // Masa pengisian IRS masih berlangsung
-                document.getElementById('irsContent').style.display = 'block';
+                if (tanggalDisetujui === null || tanggalDisetujui === '' || tanggalDisetujui === 'null') {
+                    console.log("masa IRS, belum disetujui");
+                    document.getElementById('requestIRS').style.display = 'none';
+                    document.getElementById('irsContent').style.display = 'block';
+                } else {
+                    console.log("masa IRS,sudah disetujui");
+                    document.getElementById('requestIRS').style.display = 'block';
+                    document.getElementById('irsContent').style.display = 'none';
+                }
                 document.getElementById('requestFixButton').style.display = 'none';
                 document.getElementById('requestCancellationButton').style.display = 'none';
                 document.getElementById('periodOverMessage').style.display = 'none';
             } else if (serverDate <= twoWeeksAfterEnd) {
-                // Dalam 2 minggu setelah masa pengisian berakhir
-                document.getElementById('irsContent').style.display = 'none';
-                document.getElementById('requestFixButton').style.display = 'block';
+                // Dalam 2 minggu setelah masa pengisian berakhir (masa perbaikan)
+                if (tanggalDisetujui === null || tanggalDisetujui === '' || tanggalDisetujui === 'null') {
+                    console.log("masa perbaikan, belum disetujui");
+                    document.getElementById('requestFixButton').style.display = 'none';
+                    document.getElementById('irsContent').style.display = 'block';
+                } else {
+                    console.log("masa perbaikan,sudah disetujui");
+                    document.getElementById('requestFixButton').style.display = 'block';
+                    document.getElementById('irsContent').style.display = 'none';
+}
                 document.getElementById('requestCancellationButton').style.display = 'none';
                 document.getElementById('periodOverMessage').style.display = 'none';
             } else if (serverDate <= fourWeeksAfterEnd) {
-                // Antara 2 hingga 4 minggu setelah masa pengisian berakhir
-                document.getElementById('irsContent').style.display = 'none';
+                // Antara 2 hingga 4 minggu setelah masa pengisian berakhir (masa pembatalan)
+                if (tanggalDisetujui === null || tanggalDisetujui === '' || tanggalDisetujui === 'null') {
+                    console.log("masa pembatalan,belum disetujui");
+                    document.getElementById('requestCancellationButton').style.display = 'none';
+                    document.getElementById('irsContent').style.display = 'block';
+                    // Lock daftar mata kuliah sehingga hanya bisa membatalkan matkul
+                    lockCourseList();
+                } else {
+                    console.log("masa pembatalan,sudah disetujui");
+                    document.getElementById('requestCancellationButton').style.display = 'block';
+                    document.getElementById('irsContent').style.display = 'none';
+
+                    
+                }
                 document.getElementById('requestFixButton').style.display = 'none';
-                document.getElementById('requestCancellationButton').style.display = 'block';
                 document.getElementById('periodOverMessage').style.display = 'none';
             } else {
                 // Lebih dari 4 minggu setelah masa pengisian berakhir
@@ -315,6 +355,24 @@
                 document.getElementById('periodOverMessage').style.display = 'block';
             }
         }
+
+        function lockCourseList() {
+            const courseList = document.getElementById('courseList');
+            if (courseList) {
+                courseList.style.display = 'none';
+            }
+
+            const searchInput = document.getElementById('searchCourse');
+            if (searchInput) {
+                searchInput.style.display = 'none';
+            }
+
+            const lockedMessage = document.getElementById('courseListLockedMessage');
+            if (lockedMessage) {
+                lockedMessage.style.display = 'block'; // Tampilkan pesan
+            }
+        }
+
 
         // Fungsi untuk meminta izin perbaikan IRS
         function requestFix() {
@@ -343,6 +401,7 @@
             checkIRSPeriod();
             initializeScheduleTable();
             populateCourseList();
+            loadEnrolledCourses();
             startDateTimeUpdater();
         });
 
@@ -361,12 +420,17 @@
 
         let schedulesByKodeMK = {};
 
+
         Object.values(jadwalMatkul).forEach(jadwal => {
             if (!schedulesByKodeMK[jadwal.kode_mk]) {
                 schedulesByKodeMK[jadwal.kode_mk] = [];
             }
             schedulesByKodeMK[jadwal.kode_mk].push(jadwal);
         });
+
+        const irsTerdaftar = @json($irsTerdaftar);
+        console.log("IRS Terdaftar:", @json($irsTerdaftar));
+
         
         function initializeScheduleTable() {
             const timeSlots = ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
@@ -405,7 +469,7 @@
                 days.forEach(day => {
                     const cell = document.createElement('td');
                     cell.className = 'border px-4 py-2 align-top w-auto';
-                    cell.id = `${day}-${time.replace(':', '')}`; // Gunakan format 'senin-0600'
+                    cell.id = `day-${day}-${time.replace(':', '')}`; // Gunakan format 'senin-0600'
                     row.appendChild(cell);
                 });
 
@@ -485,168 +549,230 @@
                 courseList.appendChild(courseItem);
             });
 
-            // Versi 2
-            // const courseList = document.getElementById('courseList');
-            // courseList.innerHTML = '';
-
-            // Object.keys(listMatkul).forEach((kode_mk) => {
-            //     const matkul = listMatkul[kode_mk];
-            //     const isSameSemester = matkul.plot_semester === mahasiswa.semester;
-
-            //     // Filter berdasarkan pencarian (query)
-            //     const isMatchedByQuery = filterQuery && (matkul.nama_mk.toLowerCase().includes(filterQuery) || kode_mk.toLowerCase().includes(filterQuery));
-            //     if (!isSameSemester && !isMatchedByQuery && !selectedCourses[kode_mk]) {
-            //         // Jika bukan semester mahasiswa, tidak cocok dengan pencarian, dan belum dipilih, abaikan
-            //         return;
-            //     }
-
-            //     const courseItem = document.createElement('div');
-            //     const isEnrolled = matakuliah_terdaftar.some(item => item.kode_mk === kode_mk);
-            //     const isOutsideSemester = !isSameSemester && !selectedCourses[kode_mk];
-
-            //     courseItem.className = `p-2 border rounded-lg shadow-none cursor-pointer' ${
-            //         isEnrolled ? 'bg-blue-300' : isOutsideSemester ? 'bg-gray-100'  : 'bg-white'
-            //     } hover:bg-gray-200`;
-
-            //     courseItem.dataset.kode_mk = kode_mk;
-            //     courseItem.dataset.nama = matkul.nama_mk;
-
-            //     courseItem.innerHTML = `
-            //         <p class="font-bold">${matkul.nama_mk} (${matkul.sks} SKS)</p>
-            //         <p class="text-sm text-gray-500">Kode MK: ${kode_mk}</p>
-            //     `;
-
-            //     courseItem.onclick = () => toggleCourseSelection(courseItem, matkul);
-
-            //     courseList.appendChild(courseItem);
-            // });
-
-            // Versi 1
-            // const courseList = document.getElementById('courseList');
-            // courseList.innerHTML = ''; // Kosongkan daftar sebelum diisi ulang
-
-            // // Iterasi mata kuliah dari data PHP (listMatkul)
-            // Object.keys(listMatkul).forEach((kode_mk) => {
-            //     const matkul = listMatkul[kode_mk];
-
-            //     // Hanya tampilkan mata kuliah dengan plot semester yang sesuai dengan semester mahasiswa
-            //     if (matkul.plot_semester !== {{ $mhs->semester }}) {
-            //         return; // Lewati mata kuliah yang tidak sesuai plot semester
-            //     }
-
-            //     const courseItem = document.createElement('div');
-            //     const isEnrolled = matakuliah_terdaftar.some(item => item.kode_mk === kode_mk);
-            //     courseItem.className = `p-2 border rounded-lg shadow-none cursor-pointer ${
-            //         isEnrolled ? 'bg-blue-300' : 'bg-white hover:bg-gray-100'
-            //     }`;
-            //     // courseItem.className = 'p-2 border rounded-lg bg-white shadow-none hover:bg-gray-100 cursor-pointer';
-            //     courseItem.dataset.kode_mk = kode_mk;
-            //     courseItem.dataset.nama = matkul.nama_mk;
-
-            //     // Konten mata kuliah
-            //     courseItem.innerHTML = `
-            //         <p class="font-bold">${matkul.nama_mk} (${matkul.sks} SKS)</p>
-            //         <p class="text-sm text-gray-500">Kode MK: ${kode_mk}</p>
-            //     `;
-
-            //     // Event saat diklik
-            //     courseItem.onclick = () => toggleCourseSelection(courseItem, matkul);
-
-            //     courseList.appendChild(courseItem);
-            // });
         }
 
-        function toggleCourseSelection(courseItem, matkul) {
-            const kodeMK = courseItem.dataset.kode_mk;
+        function loadEnrolledCourses() {
+    console.log("IRS Terdaftar di loadEnrolledCourses:", irsTerdaftar);
 
-            if (selectedCourses[kodeMK]) {
-                // Jika sudah dipilih, hapus dari tabel dan daftar
-                delete selectedCourses[kodeMK];
-                courseItem.classList.remove('course-selected');
-                removeCourseFromSchedule(matkul);
+    if (irsTerdaftar.length === 0) {
+        console.log("Tidak ada IRS yang terdaftar.");
+        return;
+    }
 
-                // Hapus dari daftar jika bukan semester mahasiswa
-                if (matkul.plot_semester !== mahasiswa.semester) {
-                    courseItem.remove();
-                }
-            } else {
-                // Jika belum dipilih, tambahkan ke tabel dan daftar
-                selectedCourses[kodeMK] = matkul;
-                courseItem.classList.add('course-selected');
-                addCourseToSchedule(matkul);
-            }
-            // const kodeMK = courseItem.dataset.kode_mk;
+    // Buat set untuk melacak jadwal yang sudah ditambahkan
+    const addedSchedules = new Set();
 
-            // if (selectedCourses[kodeMK]) {
-            //     // Jika sudah dipilih, hapus dari tabel dan batalkan pemilihan
-            //     delete selectedCourses[kodeMK];
-            //     courseItem.classList.remove('course-selected');
-            //     removeCourseFromSchedule(matkul);
-            // } else {
-            //     // Jika belum dipilih, tambahkan ke tabel dan tandai sebagai dipilih
-            //     selectedCourses[kodeMK] = matkul;
-            //     courseItem.classList.add('course-selected');
-            //     addCourseToSchedule(matkul);
-            // }
+    irsTerdaftar.forEach(item => {
+        console.log("Memproses item IRS:", item);
+
+        // Tambahkan ke daftar mata kuliah terdaftar hanya sekali
+        if (!matakuliah_terdaftar.some(mk => mk.kode_mk === item.kode_mk && mk.kelas === item.kelas)) {
+            matakuliah_terdaftar.push({
+                nim: mahasiswa.nim,
+                id_jadwal: item.id_jadwal,
+                hari: item.hari,
+                waktu_mulai: item.waktu_mulai.substring(0, 5),
+                waktu_selesai: item.waktu_selesai.substring(0, 5),
+                kode_mk: item.kode_mk,
+                kelas: item.kelas
+            });
+
+            // Tandai mata kuliah sebagai aktif pada daftar
+            selectedCourses[item.kode_mk] = listMatkul[item.kode_mk];
+
+            // Tambahkan SKS hanya sekali untuk mata kuliah ini
+            currentSKS += item.sks;
         }
 
-        function addCourseToSchedule(matkul) {
-            const schedules = schedulesByKodeMK[matkul.kode_mk];
-            if (!schedules || schedules.length === 0) {
-                alert(`Tidak ada jadwal untuk mata kuliah ${matkul.nama_mk}`);
+        // Tampilkan semua kelas alternatif untuk mata kuliah yang sama
+        const schedules = schedulesByKodeMK[item.kode_mk] || [];
+        schedules.forEach(schedule => {
+            const hariString = getDayIndex(schedule.hari);
+            if (!hariString) {
+                console.error("Hari tidak valid untuk jadwal:", schedule);
                 return;
             }
 
-            schedules.forEach(schedule => {
-                // const { hari, waktu_mulai, waktu_selesai } = schedule; 
-                const cell = document.getElementById(`${schedule.hari.toLowerCase()}-${schedule.waktu_mulai.substring(0, 2) + '00'}`);
-                if (cell) {
-                    // Periksa apakah jadwal ini sudah terdaftar di `matakuliah_terdaftar`
-                    const isRegistered = matakuliah_terdaftar.some(item => item.id_jadwal === schedule.id_jadwal);
-                    const isSameClass = matakuliah_terdaftar.some(item => item.kelas !== schedule.kelas && item.kode_mk === schedule.kode_mk);
+            const cellId = `day-${hariString}-${schedule.waktu_mulai.substring(0, 2)}00`;
 
-                    // Tentukan warna berdasarkan status pendaftaran
-                    const bgColor = isRegistered ? 'bg-blue-300' : isSameClass ? 'bg-blue-100' : 'bg-gray-200';
-                    const courseInfo = `
-                        <div class="${bgColor} text-sm rounded p-1 my-1 course-item" 
-                            data-id-jadwal="${schedule.id_jadwal}" data-kode-mk="${matkul.kode_mk}" 
-                            data-nama="${matkul.nama_mk}" data-sks="${matkul.sks}" data-kelas="${schedule.kelas}" 
-                            data-hari="${schedule.hari}" data-waktu="${schedule.waktu_mulai} - ${schedule.waktu_selesai}" 
-                            data-ruang="${schedule.id_ruang}" data-kuota="${schedule.kuota}">
-                            ${matkul.nama_mk} (${schedule.kelas})<br>
-                            ${schedule.waktu_mulai} - ${schedule.waktu_selesai}<br>
-                            Ruang: ${schedule.id_ruang}
-                        </div>
-                    `;
-                    cell.innerHTML += courseInfo;
+            // Periksa apakah jadwal sudah ditambahkan ke tabel
+            const scheduleKey = `${schedule.kode_mk}-${schedule.kelas}-${cellId}`;
+            if (addedSchedules.has(scheduleKey)) {
+                console.log("Jadwal sudah ditambahkan:", scheduleKey);
+                return;
+            }
 
-                    // Tambahkan event listener untuk membuka modal saat klik pada course item
-                    const courseItems = cell.querySelectorAll('.course-item');
-                    courseItems.forEach(courseItem => {
-                        courseItem.onclick = () => openModal(courseItem);
-                    });
-                }
-            });
+            addedSchedules.add(scheduleKey);
+
+            const cell = document.getElementById(cellId);
+            if (cell) {
+                console.log("Menemukan cell:", cell);
+
+                const isSelected = schedule.kelas === item.kelas;
+                const bgColor = isSelected ? 'bg-blue-300' : 'bg-blue-100';
+
+                const courseInfo = `
+                    <div class="${bgColor} text-sm rounded p-1 my-1 course-item"
+                        data-id-jadwal="${schedule.id_jadwal}" data-kode-mk="${schedule.kode_mk}"
+                        data-nama="${schedule.nama_mk}" data-sks="${schedule.sks}" data-kelas="${schedule.kelas}"
+                        data-hari="${schedule.hari}" data-waktu="${schedule.waktu_mulai} - ${schedule.waktu_selesai}"
+                        data-ruang="${schedule.id_ruang}">
+                        ${schedule.nama_mk} (${schedule.kelas})<br>
+                        ${schedule.waktu_mulai.substring(0, 5)} - ${schedule.waktu_selesai.substring(0, 5)}<br>
+                        Ruang: ${schedule.id_ruang}
+                    </div>
+                `;
+                cell.innerHTML += courseInfo;
+
+                const courseItems = cell.querySelectorAll('.course-item');
+                courseItems.forEach(courseItem => {
+                    courseItem.onclick = () => openModal(courseItem);
+                });
+            } else {
+                console.warn("Cell tidak ditemukan untuk ID:", cellId);
+            }
+        });
+    });
+
+    updateSKS();
+
+    // Update daftar mata kuliah yang sudah terdaftar di sidebar
+    populateCourseList();
+}
+
+
+
+
+
+
+function toggleCourseSelection(courseItem, matkul) {
+    const kodeMK = courseItem.dataset.kode_mk;
+
+    if (selectedCourses[kodeMK]) {
+        delete selectedCourses[kodeMK];
+        courseItem.classList.remove('course-selected');
+        removeCourseFromSchedule(matkul);
+    } else {
+        selectedCourses[kodeMK] = matkul;
+        courseItem.classList.add('course-selected');
+        addCourseToSchedule(matkul);
+    }
+    console.log("Selected Courses setelah toggle:", selectedCourses);
+}
+
+
+function getDayIndex(dayName) {
+    const daysMap = {
+        "Senin": "senin",
+        "Selasa": "selasa",
+        "Rabu": "rabu",
+        "Kamis": "kamis",
+        "Jumat": "jumat",
+        "Sabtu": "sabtu",
+        "Minggu": "minggu"
+    };
+    return daysMap[dayName] || null; // Kembalikan null jika nama hari tidak ditemukan
+}
+
+
+function addCourseToSchedule(matkul) {
+    const schedules = schedulesByKodeMK[matkul.kode_mk];
+    if (!schedules || schedules.length === 0) {
+        alert(`Tidak ada jadwal untuk mata kuliah ${matkul.nama_mk}`);
+        return;
+    }
+
+    // Gunakan set atau array untuk menyimpan jadwal yang sudah diproses agar tidak double
+    const processedIds = new Set();
+
+    schedules.forEach(schedule => {
+        const hariString = getDayIndex(schedule.hari);
+        if (!hariString) {
+            console.error("Hari tidak valid untuk jadwal:", schedule);
+            return;
         }
 
-        function removeCourseFromSchedule(matkul) {
-            const schedules = schedulesByKodeMK[matkul.kode_mk];
-            if (!schedules || schedules.length === 0) return;
+        const cellId = `day-${hariString}-${schedule.waktu_mulai.substring(0, 2)}00`;
 
-            schedules.forEach(schedule => {
-                // const { hari, waktu_mulai } = schedule;
-                const cell = document.getElementById(`${schedule.hari.toLowerCase()}-${schedule.waktu_mulai.substring(0, 2) + '00'}`);
-                if (cell) {
-                    // Hapus elemen terkait jadwal
-                    const matkulElements = cell.querySelectorAll('div');
-                    matkulElements.forEach(el => {
-                        if (el.textContent.includes(matkul.nama_mk)) {
-                            el.remove();
-                        }
-                    });
+        // Pastikan jadwal ini belum diproses sebelumnya
+        if (processedIds.has(schedule.id_jadwal)) {
+            // Sudah ditambahkan, skip
+            return;
+        }
+        processedIds.add(schedule.id_jadwal);
+
+        const cell = document.getElementById(cellId);
+        if (cell) {
+            const bgColor = 'bg-blue-300'; // Jika ingin langsung menandai terdaftar
+            const courseInfo = `
+                <div class="${bgColor} text-sm rounded p-1 my-1 course-item"
+                    data-id-jadwal="${schedule.id_jadwal}" data-kode-mk="${schedule.kode_mk}"
+                    data-nama="${schedule.nama_mk}" data-sks="${matkul.sks}" data-kelas="${schedule.kelas}"
+                    data-hari="${schedule.hari}" data-waktu="${schedule.waktu_mulai} - ${schedule.waktu_selesai}"
+                    data-ruang="${schedule.id_ruang}">
+                    ${schedule.nama_mk} (${schedule.kelas})<br>
+                    ${schedule.waktu_mulai.substring(0, 5)} - ${schedule.waktu_selesai.substring(0, 5)}<br>
+                    Ruang: ${schedule.id_ruang}
+                </div>
+            `;
+            cell.innerHTML += courseInfo;
+
+            const courseItems = cell.querySelectorAll('.course-item');
+            courseItems.forEach(courseItem => {
+                courseItem.onclick = () => openModal(courseItem);
+            });
+        } else {
+            console.warn("Cell tidak ditemukan untuk ID:", cellId);
+        }
+    });
+
+    // Tambahkan SKS hanya sekali per mata kuliah (bukan per jadwal)
+    currentSKS += matkul.sks;
+    updateSKS();
+}
+
+
+
+
+
+
+
+function removeCourseFromSchedule(matkul) {
+    console.log("Menghapus mata kuliah dari jadwal:", matkul);
+
+    const schedules = schedulesByKodeMK[matkul.kode_mk];
+    if (!schedules || schedules.length === 0) {
+        console.warn(`Tidak ada jadwal untuk mata kuliah ${matkul.nama_mk} yang bisa dihapus.`);
+        return;
+    }
+
+    schedules.forEach(schedule => {
+        const hariString = getDayIndex(schedule.hari);
+        if (!hariString) {
+            console.error("Hari tidak valid untuk jadwal:", schedule);
+            return;
+        }
+
+        const cellId = `day-${hariString}-${schedule.waktu_mulai.substring(0, 2)}00`;
+        console.log("Cell ID yang akan dihapus:", cellId);
+
+        const cell = document.getElementById(cellId);
+        if (cell) {
+            console.log("Cell ditemukan, menghapus jadwal dari cell:", cell);
+
+            // Temukan elemen dengan id_jadwal yang sesuai dan hapus
+            const courseItems = Array.from(cell.querySelectorAll('.course-item'));
+            courseItems.forEach(item => {
+                if (item.dataset.kodeMk === matkul.kode_mk) {
+                    cell.removeChild(item);
                 }
             });
+        } else {
+            console.warn("Cell tidak ditemukan untuk ID:", cellId);
         }
+    });
+}
+
 
         // Fungsi untuk memfilter daftar mata kuliah
         function filterCourses() {
@@ -882,8 +1008,10 @@
         document.getElementById('modalCancelButton').onclick = disenrollCourse;
 
         function updateSKS() {
-            document.getElementById('sksCount').innerText = `${currentSKS} / ${maxSKS} SKS`;
-        }
+    document.getElementById('sksCount').innerText = `${currentSKS} / ${maxSKS} SKS`;
+    console.log("SKS saat ini:", currentSKS);
+}
+
 
         function lockIRS() {
             const button = document.getElementById("lockButton");
